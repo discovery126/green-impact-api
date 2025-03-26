@@ -1,17 +1,17 @@
 CREATE TABLE public.cities (
-                               id integer NOT NULL,
+                               id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
                                name_city character varying(50) DEFAULT 'Таганрог'::character varying NOT NULL
 );
 
 CREATE TABLE public.credentials (
-                                    id bigint NOT NULL,
+                                    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
                                     user_id bigint NOT NULL,
                                     email character varying(100) NOT NULL,
                                     password_hash character varying(255) NOT NULL
 );
 
 CREATE TABLE public.events (
-                               id bigint NOT NULL,
+                               id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
                                name character varying(100) NOT NULL,
                                event_date_at timestamp(0) without time zone NOT NULL,
                                organiser_id bigint NOT NULL,
@@ -26,12 +26,12 @@ CREATE TABLE public.events (
 );
 
 CREATE TABLE public.reward_categories (
-                                          id integer NOT NULL,
+                                          id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
                                           name_category character varying(50) NOT NULL
 );
 
 CREATE TABLE public.rewards (
-                                id bigint NOT NULL,
+                                id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
                                 title character varying(50) NOT NULL,
                                 description character varying(100) NOT NULL,
                                 cost_points integer NOT NULL,
@@ -39,18 +39,18 @@ CREATE TABLE public.rewards (
 );
 
 CREATE TABLE public.roles (
-                              id integer NOT NULL,
+                              id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
                               name_role character varying(20) NOT NULL
 );
 
 CREATE TABLE public.roles_users (
-                                    id bigint NOT NULL,
+                                    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
                                     user_id bigint NOT NULL,
                                     role_id integer NOT NULL
 );
 
 CREATE TABLE public.taken_tasks (
-                                    id bigint NOT NULL,
+                                    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
                                     user_id bigint NOT NULL,
                                     task_id bigint NOT NULL,
                                     taken_at timestamp(0) without time zone NOT NULL
@@ -58,18 +58,18 @@ CREATE TABLE public.taken_tasks (
 
 
 CREATE TABLE public.task_categories (
-                                        id integer NOT NULL,
+                                        id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
                                         name_category character varying(50) NOT NULL
 );
 
 CREATE TABLE public.task_proofs (
-                                    id bigint NOT NULL,
+                                    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
                                     task_completion_id bigint NOT NULL,
                                     image_url text NOT NULL
 );
 
 CREATE TABLE public.tasks (
-                              id bigint NOT NULL,
+                              id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
                               title character varying(50) NOT NULL,
                               description character varying(100) NOT NULL,
                               type character varying(20) DEFAULT 'limited'::character varying NOT NULL,
@@ -81,7 +81,7 @@ CREATE TABLE public.tasks (
 );
 
 CREATE TABLE public.tasks_completion (
-                                         id bigint NOT NULL,
+                                         id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
                                          taken_task_id bigint NOT NULL,
                                          completed_at timestamp(0) without time zone NOT NULL,
                                          proof_url character varying(255) NOT NULL,
@@ -91,16 +91,16 @@ CREATE TABLE public.tasks_completion (
 );
 
 CREATE TABLE public.users (
-                              id bigint NOT NULL,
-                              name character varying(50) NOT NULL,
-                              nickname character varying(100),
-                              points integer NOT NULL,
+                              id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+                              name character varying(50),
+                              username character varying(100),
+                              points integer,
                               created_at timestamp(0) without time zone NOT NULL,
-                              city_id integer NOT NULL
+                              city_id integer
 );
 
 CREATE TABLE public.users_events (
-                                     id bigint NOT NULL,
+                                     id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
                                      user_id bigint NOT NULL,
                                      event_id bigint NOT NULL,
                                      registered_at timestamp(0) without time zone NOT NULL,
@@ -108,7 +108,7 @@ CREATE TABLE public.users_events (
 );
 
 CREATE TABLE public.users_rewards (
-                                      id bigint NOT NULL,
+                                      id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
                                       user_id bigint NOT NULL,
                                       reward_id bigint NOT NULL
 );
@@ -118,6 +118,7 @@ ALTER TABLE ONLY public.cities
 
 ALTER TABLE ONLY public.cities
     ADD CONSTRAINT cities_pkey PRIMARY KEY (id);
+
 
 ALTER TABLE ONLY public.credentials
     ADD CONSTRAINT credentials_email_unique UNIQUE (email);
@@ -180,7 +181,7 @@ ALTER TABLE ONLY public.users_events
     ADD CONSTRAINT users_events_pkey PRIMARY KEY (id);
 
 ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_nickname_unique UNIQUE (nickname);
+    ADD CONSTRAINT users_username_unique UNIQUE (username);
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
