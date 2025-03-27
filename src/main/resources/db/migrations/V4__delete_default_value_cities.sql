@@ -1,0 +1,1 @@
+ALTER TABLE cities ALTER COLUMN name_city DROP DEFAULT;

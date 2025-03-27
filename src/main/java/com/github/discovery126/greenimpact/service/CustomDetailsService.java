@@ -4,6 +4,7 @@ import com.github.discovery126.greenimpact.model.Credential;
 import com.github.discovery126.greenimpact.model.Role;
 import com.github.discovery126.greenimpact.repository.CredentialRepository;
 import com.github.discovery126.greenimpact.repository.UserRepository;
+import com.github.discovery126.greenimpact.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -24,7 +25,8 @@ public class CustomDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Credential credentialUser = this.credentialRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User with %s not found".formatted(email)));
-        return User.builder()
+
+        return CustomUserDetails.builder()
                 .username(credentialUser.getEmail())
                 .password(credentialUser.getPasswordHash())
                 .authorities(credentialUser.getUser().getRoles()
@@ -32,6 +34,8 @@ public class CustomDetailsService implements UserDetailsService {
                         .map(Role::getNameRole)
                         .map(SimpleGrantedAuthority::new)
                         .toList())
+                .email(credentialUser.getEmail())
+                .id(credentialUser.getUser().getId())
                 .build();
     }
 }

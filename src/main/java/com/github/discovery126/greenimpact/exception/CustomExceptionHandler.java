@@ -18,11 +18,19 @@ import java.util.List;
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({UsernameAlreadyExistsException.class, EmailAlreadyExistsException.class})
-    protected ResponseEntity<ErrorDto> handleServerErrorException(RuntimeException ex) {
+    protected ResponseEntity<ErrorDto> handleExistsException(RuntimeException ex) {
 
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new ErrorDto(List.of(ex.getMessage())));
     }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    protected ResponseEntity<ErrorDto> handleUnauthorizedException(UnauthorizedException ex) {
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorDto(List.of(ex.getMessage())));
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers,
