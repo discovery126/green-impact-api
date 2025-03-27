@@ -3,6 +3,7 @@ package com.github.discovery126.greenimpact.controller;
 
 import com.github.discovery126.greenimpact.dto.RegisterDto;
 import com.github.discovery126.greenimpact.service.CredentialService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class RegisterController {
     private final CredentialService credentialService;
 
     @PostMapping
-    public ResponseEntity<Void> register(@RequestBody RegisterDto registerDto) {
+    public ResponseEntity<Void> register(@RequestBody @Valid RegisterDto registerDto) {
         credentialService.register(registerDto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
