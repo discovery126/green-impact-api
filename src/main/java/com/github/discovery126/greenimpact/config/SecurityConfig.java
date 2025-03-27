@@ -57,6 +57,9 @@ public class SecurityConfig {
                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                .httpBasic(withDefaults());
 
+       http.addFilterAfter(roleHeaderFilter,
+               org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.class);
+
        return http.build();
     }
 }
