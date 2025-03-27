@@ -27,7 +27,14 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UnauthorizedException.class)
     protected ResponseEntity<ErrorDto> handleUnauthorizedException(UnauthorizedException ex) {
 
-        return ResponseEntity.status(HttpStatus.CONFLICT)
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorDto(List.of(ex.getMessage())));
+    }
+
+    @ExceptionHandler({RoleNotFoundException.class,CityNotFoundException.class})
+    protected ResponseEntity<ErrorDto> handleNotFoundException(RuntimeException ex) {
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorDto(List.of(ex.getMessage())));
     }
 
