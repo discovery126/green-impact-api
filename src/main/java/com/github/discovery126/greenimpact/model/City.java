@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Builder
@@ -22,4 +23,10 @@ public class City {
 
     @Column(nullable = false,unique = true)
     private String nameCity;
+
+    @Column(precision = 9, scale = 6, nullable = false)
+    private BigDecimal latitude;
+
+    @Column(precision = 9, scale = 6, nullable = false)
+    private BigDecimal longitude;
 }
