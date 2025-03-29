@@ -130,6 +130,14 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void deleteUser(Long userId) {
+        if (userRepository.existsById(userId)) {
+            userRepository.deleteById(userId);
+        } else {
+            throw new UserNotFoundException("Пользователь с id %d не найден".formatted(userId));
+        }
+    }
+
     private void checkEmailExistence(String email) {
         Optional<User> existedUser = userRepository.findByEmail(email);
         if (existedUser.isPresent())
