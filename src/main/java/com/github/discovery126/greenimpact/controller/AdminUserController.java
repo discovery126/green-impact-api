@@ -1,6 +1,7 @@
 package com.github.discovery126.greenimpact.controller;
 
 import com.github.discovery126.greenimpact.dto.request.UserRequest;
+import com.github.discovery126.greenimpact.dto.request.UserUpdateRequest;
 import com.github.discovery126.greenimpact.dto.response.UserResponse;
 import com.github.discovery126.greenimpact.mapper.UserMapper;
 import com.github.discovery126.greenimpact.model.User;
@@ -38,6 +39,13 @@ public class AdminUserController {
         userService.createUser(userRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
+                .build();
+    }
+    @PostMapping("{id}")
+    public ResponseEntity<UserResponse> updateUser(@RequestBody @Valid UserUpdateRequest userUpdateRequest,
+                                                   @PathVariable Long id) {
+        userService.updateUser(userUpdateRequest,id);
+        return ResponseEntity.ok()
                 .build();
     }
 

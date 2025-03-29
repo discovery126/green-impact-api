@@ -2,6 +2,8 @@ package com.github.discovery126.greenimpact.service;
 
 import com.github.discovery126.greenimpact.dto.RegisterDto;
 import com.github.discovery126.greenimpact.dto.request.UserRequest;
+import com.github.discovery126.greenimpact.dto.request.UserUpdateRequest;
+import com.github.discovery126.greenimpact.exception.UserNotFoundException;
 import com.github.discovery126.greenimpact.exception.UsernameAlreadyExistsException;
 import com.github.discovery126.greenimpact.model.City;
 import com.github.discovery126.greenimpact.model.Role;
@@ -93,6 +95,39 @@ public class UserService {
                 .build();
 
         userRepository.save(newUser);
+    }
+
+    public void updateUser(UserUpdateRequest userUpdateRequest, Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty())
+            throw new UserNotFoundException("User not found");
+
+        City city = cityService.getCity(userUpdateRequest.getCityId());
+
+        Set<Role> roles = userUpdateRequest
+                .getRoles()
+                .stream()
+                .map(roleService::getRole)
+                .collect(Collectors.toSet());
+
+        User user = userOptional.get();
+
+        if (!user.getEmail().equals(userUpdateRequest.getEmail())) {
+            user.setEmail(userUpdateRequest.getEmail());
+        }
+        if (!user.getDisplayName().equals(userUpdateRequest.getDisplayName())) {
+            user.setDisplayName(userUpdateRequest.getDisplayName());
+        }
+        if (!user.getPoints().equals(userUpdateRequest.getPoints())) {
+            user.setPoints(userUpdateRequest.getPoints());
+        }
+        if (!user.getRoles().equals(roles)) {
+            user.setRoles(roles);
+        }
+        if (!user.getCity().equals(city)) {
+            user.setCity(city);
+        }
+        userRepository.save(user);
     }
 
     private void checkEmailExistence(String email) {
