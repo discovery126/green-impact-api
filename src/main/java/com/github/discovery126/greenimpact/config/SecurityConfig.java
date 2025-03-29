@@ -1,6 +1,6 @@
 package com.github.discovery126.greenimpact.config;
 
-import com.github.discovery126.greenimpact.repository.CredentialRepository;
+import com.github.discovery126.greenimpact.repository.UserRepository;
 import com.github.discovery126.greenimpact.security.RoleHeaderFilter;
 import com.github.discovery126.greenimpact.service.CustomDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -26,11 +26,11 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final CredentialRepository credentialRepository;
+    private final UserRepository userRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return new CustomDetailsService(credentialRepository);
+        return new CustomDetailsService(userRepository);
     }
 
     @Bean

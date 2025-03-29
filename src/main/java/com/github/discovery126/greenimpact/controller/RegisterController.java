@@ -2,7 +2,7 @@ package com.github.discovery126.greenimpact.controller;
 
 
 import com.github.discovery126.greenimpact.dto.RegisterDto;
-import com.github.discovery126.greenimpact.service.CredentialService;
+import com.github.discovery126.greenimpact.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class RegisterController {
 
-    private final CredentialService credentialService;
+    private final UserService userService;
 
     @PostMapping
     public ResponseEntity<Void> register(@RequestBody @Valid RegisterDto registerDto) {
-        credentialService.register(registerDto);
+        userService.register(registerDto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }

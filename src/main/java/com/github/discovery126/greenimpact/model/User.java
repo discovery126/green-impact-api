@@ -22,16 +22,18 @@ public class User {
     @Column
     private Long id;
 
-    @Column
-    @Builder.Default
-    private String name = "";
-
     @Column(unique = true)
-    private String username;
+    private String displayName;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column
+    private String passwordHash;
 
     @Column
     @Builder.Default
-    private Long points = 0L;
+    private Integer points = 0;
 
     @Column
     @Builder.Default

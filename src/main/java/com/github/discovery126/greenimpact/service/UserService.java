@@ -1,30 +1,30 @@
 package com.github.discovery126.greenimpact.service;
 
 import com.github.discovery126.greenimpact.dto.RegisterDto;
-import com.github.discovery126.greenimpact.exception.EmailAlreadyExistsException;
 import com.github.discovery126.greenimpact.exception.UsernameAlreadyExistsException;
 import com.github.discovery126.greenimpact.model.City;
-import com.github.discovery126.greenimpact.model.Credential;
 import com.github.discovery126.greenimpact.model.Role;
 import com.github.discovery126.greenimpact.model.User;
-import com.github.discovery126.greenimpact.repository.CredentialRepository;
 import com.github.discovery126.greenimpact.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class CredentialService {
+@Transactional
+public class UserService {
+
+    private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
-    private final CredentialRepository credentialRepository;
-    private final UserRepository userRepository;
-    private final RoleService roleService;
+
     private final CityService cityService;
+    private final RoleService roleService;
 
     public void register(RegisterDto registerDto) {
 
@@ -33,33 +33,34 @@ public class CredentialService {
         final City city = cityService.getCity(cityDefault);
         final Role role = roleService.getRole(roleByDefault);
 
-        Optional<User> existedUser = userRepository.findByUsername(registerDto.getUsername());
-        if (existedUser.isPresent()) {
-            throw new UsernameAlreadyExistsException("Username is already taken");
-        }
+        checkDisplayNameExistence(registerDto.getDisplayName());
 
-        Optional<Credential> existedCredentialsUser = credentialRepository.findByEmail(registerDto.getEmail());
-        if (existedCredentialsUser.isPresent()) {
-            throw new EmailAlreadyExistsException("Email is already registered");
-        }
+        checkEmailExistence(registerDto.getEmail());
 
         Set<Role> userRoles = Set.of(role);
 
         User user = User.builder()
-                .username(registerDto.getUsername())
+                .displayName(registerDto.getDisplayName())
+                .email(registerDto.getEmail())
+                .passwordHash(passwordEncoder.encode(registerDto.getPassword()))
                 .roles(userRoles)
                 .city(city)
                 .build();
 
-        Credential credential = Credential.builder()
-                .user(user)
-                .email(registerDto.getEmail())
-                .passwordHash(passwordEncoder.encode(registerDto.getPassword()))
-                .build();
-
         userRepository.save(user);
-
-        credentialRepository.save(credential);
-
     }
+
+    private void checkEmailExistence(String email) {
+        Optional<User> existedUser = userRepository.findByEmail(email);
+        if (existedUser.isPresent())
+            throw new UsernameAlreadyExistsException("Email is already registered");
+    }
+
+    private void checkDisplayNameExistence(String displayName) {
+        Optional<User> existedUser = userRepository.findByDisplayName(displayName);
+        if (existedUser.isPresent())
+            throw new UsernameAlreadyExistsException("Username is already taken");
+    }
+
+
 }
