@@ -7,6 +7,10 @@ import com.github.discovery126.greenimpact.model.Role;
 import com.github.discovery126.greenimpact.model.User;
 import com.github.discovery126.greenimpact.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +53,20 @@ public class UserService {
 
         userRepository.save(user);
     }
+    @Transactional(readOnly = true)
+    public Page<User> getAllUsers(int page, int size, String sort) {
+
+        Sort sortOrder = Sort.by(sort.split(",")[0]);
+        if (sort.split(",")[1].equalsIgnoreCase("desc")) {
+            sortOrder = sortOrder.descending();
+        } else {
+            sortOrder = sortOrder.ascending();
+        }
+
+        Pageable pageable = PageRequest.of(page, size, sortOrder);
+
+        return userRepository.findAll(pageable);
+    }
 
     private void checkEmailExistence(String email) {
         Optional<User> existedUser = userRepository.findByEmail(email);
@@ -61,6 +79,4 @@ public class UserService {
         if (existedUser.isPresent())
             throw new UsernameAlreadyExistsException("Username is already taken");
     }
-
-
 }

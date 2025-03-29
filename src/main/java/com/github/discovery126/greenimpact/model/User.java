@@ -37,7 +37,7 @@ public class User {
 
     @Column
     @Builder.Default
-    private LocalDateTime created_at = LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "city_id")

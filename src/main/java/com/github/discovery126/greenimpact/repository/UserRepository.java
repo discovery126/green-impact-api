@@ -1,6 +1,8 @@
 package com.github.discovery126.greenimpact.repository;
 
 import com.github.discovery126.greenimpact.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
