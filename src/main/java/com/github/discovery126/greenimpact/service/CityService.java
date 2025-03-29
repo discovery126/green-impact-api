@@ -1,10 +1,12 @@
 package com.github.discovery126.greenimpact.service;
 
+import com.github.discovery126.greenimpact.dto.request.CityRequest;
 import com.github.discovery126.greenimpact.dto.response.CityResponse;
 import com.github.discovery126.greenimpact.exception.CityNotFoundException;
 import com.github.discovery126.greenimpact.mapper.CityMapper;
 import com.github.discovery126.greenimpact.model.City;
 import com.github.discovery126.greenimpact.repository.CityRepository;
+import com.github.discovery126.greenimpact.utils.Geometry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import java.util.Optional;
 public class CityService {
     private final CityRepository cityRepository;
     private final CityMapper cityMapper;
+    private final OpenCageService openCageService;
 
     public City getCity(String nameCity) {
         Optional<City> city = cityRepository.findByNameCity(nameCity);
@@ -38,5 +41,24 @@ public class CityService {
                 .stream()
                 .map(cityMapper::toResponse)
                 .toList();
+    }
+
+    public CityResponse createCity(CityRequest cityRequest) {
+        Geometry geometry = openCageService.getGeometryCity(cityRequest.getNameCity());
+        City city = City.builder()
+                .latitude(geometry.getLatitude())
+                .longitude(geometry.getLongitude())
+                .nameCity(cityRequest.getNameCity())
+                .build();
+
+        return cityMapper.toResponse(cityRepository.save(city));
+    }
+
+    public void deleteCity(Integer cityId) {
+        if (cityRepository.existsById(cityId)) {
+            cityRepository.deleteById(cityId);
+        } else {
+            throw new CityNotFoundException("Город с id %d не найден".formatted(cityId));
+        }
     }
 }

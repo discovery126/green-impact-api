@@ -14,8 +14,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost/green-impact
-    username: ${LOGIN_BD:greenimpact}
-    password: ${PASS_BD:password}
+    username: "${LOGIN_BD:greenimpact}"
+    password: "${PASS_BD:password}"
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -32,3 +32,5 @@ spring:
     enabled: true
     baseline-on-migrate: true
 
+open-cage:
+  api-key: "${OPEN_CAGE_API}"
