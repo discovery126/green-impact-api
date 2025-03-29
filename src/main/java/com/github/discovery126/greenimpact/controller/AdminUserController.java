@@ -1,17 +1,17 @@
 package com.github.discovery126.greenimpact.controller;
 
+import com.github.discovery126.greenimpact.dto.request.UserRequest;
 import com.github.discovery126.greenimpact.dto.response.UserResponse;
 import com.github.discovery126.greenimpact.mapper.UserMapper;
 import com.github.discovery126.greenimpact.model.User;
 import com.github.discovery126.greenimpact.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/admin/users")
@@ -31,6 +31,14 @@ public class AdminUserController {
         Page<User> userDtoPage = userService.getAllUsers(page,size,sort);
         return ResponseEntity
                 .ok(userDtoPage.map(userMapper::toResponse));
+    }
+
+    @PostMapping
+    public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserRequest userRequest) {
+        userService.createUser(userRequest);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .build();
     }
 
 }

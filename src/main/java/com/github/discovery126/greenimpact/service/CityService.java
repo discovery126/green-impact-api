@@ -16,7 +16,15 @@ public class CityService {
     public City getCity(String nameCity) {
         Optional<City> city = cityRepository.findByNameCity(nameCity);
         if (city.isEmpty())
-            throw new CityNotFoundException("City not found: %s ".formatted(nameCity));
+            throw new CityNotFoundException("Город с названием %s не найден".formatted(nameCity));
+
+        return city.get();
+    }
+
+    public City getCity(Integer id) {
+        Optional<City> city = cityRepository.findById(id);
+        if (city.isEmpty())
+            throw new CityNotFoundException("Город с id %d не найден".formatted(id));
 
         return city.get();
     }

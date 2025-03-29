@@ -1,6 +1,7 @@
 package com.github.discovery126.greenimpact.service;
 
 import com.github.discovery126.greenimpact.dto.RegisterDto;
+import com.github.discovery126.greenimpact.dto.request.UserRequest;
 import com.github.discovery126.greenimpact.exception.UsernameAlreadyExistsException;
 import com.github.discovery126.greenimpact.model.City;
 import com.github.discovery126.greenimpact.model.Role;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -66,6 +68,31 @@ public class UserService {
         Pageable pageable = PageRequest.of(page, size, sortOrder);
 
         return userRepository.findAll(pageable);
+    }
+
+    public void createUser(UserRequest userRequest) {
+        City city = cityService.getCity(userRequest.getCityId());
+
+        Set<Role> roles = userRequest
+                .getRoles()
+                .stream()
+                .map(roleService::getRole)
+                .collect(Collectors.toSet());
+
+        checkDisplayNameExistence(userRequest.getDisplayName());
+
+        checkEmailExistence(userRequest.getEmail());
+
+        User newUser = User.builder()
+                .email(userRequest.getEmail())
+                .displayName(userRequest.getDisplayName())
+                .points(userRequest.getPoints())
+                .city(city)
+                .passwordHash(passwordEncoder.encode(userRequest.getPassword()))
+                .roles(roles)
+                .build();
+
+        userRepository.save(newUser);
     }
 
     private void checkEmailExistence(String email) {
