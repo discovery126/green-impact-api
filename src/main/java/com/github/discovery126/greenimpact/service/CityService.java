@@ -1,17 +1,21 @@
 package com.github.discovery126.greenimpact.service;
 
+import com.github.discovery126.greenimpact.dto.response.CityResponse;
 import com.github.discovery126.greenimpact.exception.CityNotFoundException;
+import com.github.discovery126.greenimpact.mapper.CityMapper;
 import com.github.discovery126.greenimpact.model.City;
 import com.github.discovery126.greenimpact.repository.CityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CityService {
     private final CityRepository cityRepository;
+    private final CityMapper cityMapper;
 
     public City getCity(String nameCity) {
         Optional<City> city = cityRepository.findByNameCity(nameCity);
@@ -29,5 +33,10 @@ public class CityService {
         return city.get();
     }
 
-
+    public List<CityResponse> getAllCities() {
+        return cityRepository.findAll()
+                .stream()
+                .map(cityMapper::toResponse)
+                .toList();
+    }
 }
