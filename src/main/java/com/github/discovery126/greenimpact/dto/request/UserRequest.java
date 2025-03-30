@@ -45,8 +45,4 @@ public class UserRequest {
     @Size(min = 1, message = "Пользователь должен иметь хотя бы одну роль")
     private Set<Integer> roles;
 
-    @Builder.Default
-    @JsonProperty("created_at")
-    private LocalDateTime createdAt = LocalDateTime.now();
-
 }

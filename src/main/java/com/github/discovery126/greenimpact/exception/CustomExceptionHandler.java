@@ -34,10 +34,17 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({RoleNotFoundException.class,
             CityNotFoundException.class,
             UserNotFoundException.class,
-            NotFoundCityOpenCageException.class})
+            NotFoundOpenCageException.class})
     protected ResponseEntity<ErrorDto> handleNotFoundException(RuntimeException ex) {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorDto(List.of(ex.getMessage())));
+    }
+
+    @ExceptionHandler(NotFoundOpenCageApiException.class)
+    protected ResponseEntity<ErrorDto> handleNotFoundOpenCageApiException(NotFoundOpenCageApiException ex) {
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorDto(List.of(ex.getMessage())));
     }
 
