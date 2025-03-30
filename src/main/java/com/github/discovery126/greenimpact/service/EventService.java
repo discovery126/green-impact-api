@@ -11,6 +11,8 @@ import com.github.discovery126.greenimpact.utils.Geometry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class EventService {
@@ -45,5 +47,12 @@ public class EventService {
                 .build();
 
         return eventMapper.toResponse(eventRepository.save(event));
+    }
+
+    public List<EventResponse> getAllEvents() {
+        return eventRepository.findAll()
+                .stream()
+                .map(eventMapper::toResponse)
+                .toList();
     }
 }
