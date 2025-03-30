@@ -36,17 +36,16 @@ public class AdminUserController {
 
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserRequest userRequest) {
-        userService.createUser(userRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .build();
+                .body(userService.createUser(userRequest));
     }
     @PostMapping("{id}")
     public ResponseEntity<UserResponse> updateUser(@RequestBody @Valid UserUpdateRequest userUpdateRequest,
                                                    @PathVariable Long id) {
-        userService.updateUser(userUpdateRequest,id);
-        return ResponseEntity.ok()
-                .build();
+
+        return ResponseEntity
+                .ok(userService.updateUser(userUpdateRequest,id));
     }
 
     @DeleteMapping("{id}")

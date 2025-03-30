@@ -15,6 +15,8 @@ import java.util.Set;
 @AllArgsConstructor
 public class UserResponse {
 
+    private long id;
+
     private String email;
 
     @JsonProperty("display_name")

@@ -4,7 +4,6 @@ import com.github.discovery126.greenimpact.dto.EventStatus;
 import com.github.discovery126.greenimpact.dto.request.EventRequest;
 import com.github.discovery126.greenimpact.dto.response.EventResponse;
 import com.github.discovery126.greenimpact.exception.EventNotFoundException;
-import com.github.discovery126.greenimpact.exception.UserNotFoundException;
 import com.github.discovery126.greenimpact.mapper.EventMapper;
 import com.github.discovery126.greenimpact.model.City;
 import com.github.discovery126.greenimpact.model.Event;
@@ -16,7 +15,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
+
+import static com.github.discovery126.greenimpact.utils.UpdateUtils.updateFieldIfChanged;
 
 @Service
 @RequiredArgsConstructor
@@ -102,11 +102,6 @@ public class EventService {
         updateFieldIfChanged(event.getCity(), city, event::setCity);
 
         return eventMapper.toResponse(eventRepository.save(event));
-    }
-    private static <T> void updateFieldIfChanged(T oldValue, T newValue, Consumer<T> setter) {
-        if (!Objects.equals(oldValue, newValue)) {
-            setter.accept(newValue);
-        }
     }
 
     public void deleteEvent(long eventId) {
