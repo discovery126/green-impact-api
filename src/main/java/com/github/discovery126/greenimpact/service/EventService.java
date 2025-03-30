@@ -3,6 +3,8 @@ package com.github.discovery126.greenimpact.service;
 import com.github.discovery126.greenimpact.dto.EventStatus;
 import com.github.discovery126.greenimpact.dto.request.EventRequest;
 import com.github.discovery126.greenimpact.dto.response.EventResponse;
+import com.github.discovery126.greenimpact.exception.EventNotFoundException;
+import com.github.discovery126.greenimpact.exception.UserNotFoundException;
 import com.github.discovery126.greenimpact.mapper.EventMapper;
 import com.github.discovery126.greenimpact.model.City;
 import com.github.discovery126.greenimpact.model.Event;
@@ -12,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 @Service
 @RequiredArgsConstructor
@@ -54,5 +59,53 @@ public class EventService {
                 .stream()
                 .map(eventMapper::toResponse)
                 .toList();
+    }
+
+    public EventResponse updateEvent(EventRequest eventRequest, long id) {
+        Optional<Event> eventOptional = eventRepository.findById(id);
+        if (eventOptional.isEmpty())
+            throw new EventNotFoundException("Event not found");
+
+        City city = cityService.getCity(eventRequest.getCityId());
+
+        Event event = eventOptional.get();
+
+        //Если houseNumber или street или изменился, то расчитываем новую широту и долготу, иначе нет
+        //houseNumber может быт null, поэтому у него другая проверка
+        boolean houseNumberChanged = !Objects.equals(event.getHouseNumber(), eventRequest.getHouseNumber());
+        boolean streetChanged = !event.getStreet().equals(eventRequest.getStreet());
+
+        if (houseNumberChanged || streetChanged) {
+            event.setHouseNumber(eventRequest.getHouseNumber());
+            event.setStreet(eventRequest.getStreet());
+
+            Geometry geometry = openCageService.getGeometryEvent(
+                    city,
+                    eventRequest.getStreet(),
+                    eventRequest.getHouseNumber()
+            );
+
+            updateFieldIfChanged(event.getLatitude(), geometry.getLatitude(), event::setLatitude);
+            updateFieldIfChanged(event.getLongitude(), geometry.getLongitude(), event::setLongitude);
+        }
+
+        updateFieldIfChanged(event.getName(), eventRequest.getName(), event::setName);
+        updateFieldIfChanged(event.getDescription(), eventRequest.getDescription(), event::setDescription);
+        updateFieldIfChanged(event.getStreet(), eventRequest.getStreet(), event::setStreet);
+        updateFieldIfChanged(event.getHouseNumber(), eventRequest.getHouseNumber(), event::setHouseNumber);
+        updateFieldIfChanged(event.getOrganiserName(), eventRequest.getOrganiserName(), event::setOrganiserName);
+        updateFieldIfChanged(event.getOrganiserPhone(), eventRequest.getOrganiserPhone(), event::setOrganiserPhone);
+        updateFieldIfChanged(event.getStartDate(), eventRequest.getStartDate(), event::setStartDate);
+        updateFieldIfChanged(event.getEndDate(), eventRequest.getEndDate(), event::setEndDate);
+        updateFieldIfChanged(event.getEventCode(), eventRequest.getEventCode(), event::setEventCode);
+        updateFieldIfChanged(event.getEventPoints(), eventRequest.getEventPoints(), event::setEventPoints);
+        updateFieldIfChanged(event.getCity(), city, event::setCity);
+
+        return eventMapper.toResponse(eventRepository.save(event));
+    }
+    private static <T> void updateFieldIfChanged(T oldValue, T newValue, Consumer<T> setter) {
+        if (!Objects.equals(oldValue, newValue)) {
+            setter.accept(newValue);
+        }
     }
 }

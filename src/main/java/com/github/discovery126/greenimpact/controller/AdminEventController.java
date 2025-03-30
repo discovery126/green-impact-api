@@ -28,6 +28,14 @@ public class AdminEventController {
     }
     @GetMapping
     public ResponseEntity<List<EventResponse>> getAllEvents() {
-        return ResponseEntity.ok(eventService.getAllEvents());
+        return ResponseEntity
+                .ok(eventService.getAllEvents());
+    }
+
+    @PostMapping("{id}")
+    public ResponseEntity<EventResponse> updateEvent(@RequestBody @Valid EventRequest eventRequest,
+                                                     @PathVariable long id) {
+        return ResponseEntity
+                .ok(eventService.updateEvent(eventRequest,id));
     }
 }

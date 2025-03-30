@@ -34,7 +34,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({RoleNotFoundException.class,
             CityNotFoundException.class,
             UserNotFoundException.class,
-            NotFoundOpenCageException.class})
+            NotFoundOpenCageException.class,
+            EventNotFoundException.class})
     protected ResponseEntity<ErrorDto> handleNotFoundException(RuntimeException ex) {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
