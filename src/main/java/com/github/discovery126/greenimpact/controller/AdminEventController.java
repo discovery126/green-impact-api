@@ -38,4 +38,12 @@ public class AdminEventController {
         return ResponseEntity
                 .ok(eventService.updateEvent(eventRequest,id));
     }
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteEvent(@PathVariable long id) {
+        eventService.deleteEvent(id);
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
 }

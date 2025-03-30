@@ -108,4 +108,12 @@ public class EventService {
             setter.accept(newValue);
         }
     }
+
+    public void deleteEvent(long eventId) {
+        if (eventRepository.existsById(eventId)) {
+            eventRepository.deleteById(eventId);
+        } else {
+            throw new EventNotFoundException("Мероприятие с id %d не найдено".formatted(eventId));
+        }
+    }
 }
