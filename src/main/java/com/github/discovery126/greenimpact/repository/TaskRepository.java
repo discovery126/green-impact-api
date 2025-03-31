@@ -14,8 +14,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
              LEFT JOIN taken_tasks tt ON t.id = tt.task_id AND tt.user_id = :user_id
     WHERE
         (t.type = 'DAILY' OR (t.type = 'LIMITED' AND NOW() BETWEEN t.start_date AND t.end_date))
-      AND tt.task_id IS NULL
-      """,nativeQuery = true)
+      AND tt.task_id IS NULL;""",nativeQuery = true)
     List<Task> findAllTaskForUser(@Param("user_id") Long userId);
 
 }
