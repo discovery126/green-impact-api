@@ -9,6 +9,7 @@ import com.github.discovery126.greenimpact.model.Task;
 import com.github.discovery126.greenimpact.model.TaskCategory;
 import com.github.discovery126.greenimpact.model.TaskType;
 import com.github.discovery126.greenimpact.repository.TaskRepository;
+import com.github.discovery126.greenimpact.security.SecuritySessionContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
     private final TaskCategoryService taskCategoryService;
+    private final SecuritySessionContext securitySessionContext;
 
     public List<TaskResponse> getAllTasks() {
         return taskRepository.findAll()
@@ -77,6 +79,13 @@ public class TaskService {
 
     public List<TaskResponse> getTasksForCurrentUser(Long userId) {
         return taskRepository.findAllTaskForUser(userId)
+                .stream()
+                .map(taskMapper::toResponse)
+                .toList();
+    }
+
+    public List<TaskResponse> getActiveTasks() {
+        return taskRepository.findAllActiveTaskForUser(securitySessionContext.getId())
                 .stream()
                 .map(taskMapper::toResponse)
                 .toList();

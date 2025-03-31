@@ -17,4 +17,10 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
       AND tt.task_id IS NULL;""",nativeQuery = true)
     List<Task> findAllTaskForUser(@Param("user_id") Long userId);
 
+    @Query(value = """
+    SELECT t.*
+    FROM tasks t
+        JOIN taken_tasks tt ON t.id = tt.task_id AND tt.user_id = :user_id""",nativeQuery = true)
+    List<Task> findAllActiveTaskForUser(@Param("user_id") Long userId);
+
 }
