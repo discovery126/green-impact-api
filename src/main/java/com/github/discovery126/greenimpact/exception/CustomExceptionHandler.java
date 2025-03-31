@@ -17,7 +17,9 @@ import java.util.List;
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler({UsernameAlreadyExistsException.class, EmailAlreadyExistsException.class})
+    @ExceptionHandler({UsernameAlreadyExistsException.class,
+            EmailAlreadyExistsException.class,
+            TaskAlreadyTakenException.class})
     protected ResponseEntity<ErrorDto> handleExistsException(RuntimeException ex) {
 
         return ResponseEntity.status(HttpStatus.CONFLICT)

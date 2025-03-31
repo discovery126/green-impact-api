@@ -17,4 +17,5 @@ FROM tasks t
           JOIN taken_tasks tt ON t.id = tt.task_id AND tt.user_id = :user_id
 WHERE t.type = :type;""",nativeQuery = true)
     List<TakenTask> findAllTakenTaskByUserIdAndType(@Param("user_id") Long userId, @Param("type")String taskType);
+    boolean existsByUserIdAndTaskId(Long userId, Long taskId);
 }

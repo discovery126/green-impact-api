@@ -2,14 +2,14 @@ package com.github.discovery126.greenimpact.controller;
 
 
 import com.github.discovery126.greenimpact.dto.response.TaskResponse;
+import com.github.discovery126.greenimpact.service.TakenTaskService;
 import com.github.discovery126.greenimpact.service.TaskService;
 import com.github.discovery126.greenimpact.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,6 +20,7 @@ public class UserController {
 
     private final UserService userService;
     private final TaskService taskService;
+    private final TakenTaskService takenTaskService;
 
     @GetMapping("/tasks")
     public ResponseEntity<List<TaskResponse>> getTasks() {
@@ -32,5 +33,13 @@ public class UserController {
     public ResponseEntity<List<TaskResponse>> getActiveTasks() {
         return ResponseEntity
                 .ok(taskService.getActiveTasks());
+    }
+    @PreAuthorize("hasAuthority('USER')")
+    @PostMapping("/tasks/{taskId}/take")
+    public ResponseEntity<Void> takeTask(@PathVariable Long taskId) {
+        takenTaskService.takeTask(taskId);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .build();
     }
 }
