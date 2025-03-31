@@ -2,6 +2,7 @@ package com.github.discovery126.greenimpact.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.discovery126.greenimpact.model.RewardType;
+import com.github.discovery126.greenimpact.utils.ValidEnum;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,8 +27,9 @@ public class RewardRequest {
     private Integer amount;
 
     @NotNull
+    @ValidEnum(enumClass = RewardType.class, message = "Неправильный тип награды")
     @JsonProperty("reward_type")
-    private RewardType rewardType;
+    private String rewardType;
 
     @NotNull(message = "Стоимость в баллах не может быть пустой")
     @Positive(message = "Стоимость в баллах должна быть положительным числом")
