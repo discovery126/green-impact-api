@@ -3,6 +3,7 @@ package com.github.discovery126.greenimpact.service;
 import com.github.discovery126.greenimpact.dto.request.RewardRequest;
 import com.github.discovery126.greenimpact.dto.response.RewardResponse;
 import com.github.discovery126.greenimpact.exception.RewardNotFoundException;
+import com.github.discovery126.greenimpact.exception.UserNotFoundException;
 import com.github.discovery126.greenimpact.mapper.RewardMapper;
 import com.github.discovery126.greenimpact.model.Reward;
 import com.github.discovery126.greenimpact.model.RewardCategory;
@@ -65,5 +66,13 @@ public class RewardService {
         updateFieldIfChanged(reward.getType(),rewardType, reward::setType);
 
         return rewardMapper.toResponse(rewardRepository.save(reward));
+    }
+
+    public void deleteReward(Long rewardId) {
+        if (rewardRepository.existsById(rewardId)) {
+            rewardRepository.deleteById(rewardId);
+        } else {
+            throw new UserNotFoundException("Награда с id %d не найдена".formatted(rewardId));
+        }
     }
 }

@@ -38,4 +38,12 @@ public class AdminRewardController {
         return ResponseEntity
                 .ok(rewardService.updateReward(rewardRequest,id));
     }
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteReward(@PathVariable Long id) {
+        rewardService.deleteReward(id);
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
 }
