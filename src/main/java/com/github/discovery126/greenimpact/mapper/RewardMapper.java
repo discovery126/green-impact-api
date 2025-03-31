@@ -16,6 +16,7 @@ public class RewardMapper {
                 .category(reward.getCategory())
                 .type(reward.getType().name())
                 .amount(reward.getAmount())
+                .createdAt(reward.getCreatedAt())
                 .build();
     }
 }

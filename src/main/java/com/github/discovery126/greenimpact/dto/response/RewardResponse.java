@@ -30,7 +30,7 @@ public class RewardResponse {
     private int costPoints;
 
     @JsonProperty("created_at")
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     private RewardCategory category;
 }
