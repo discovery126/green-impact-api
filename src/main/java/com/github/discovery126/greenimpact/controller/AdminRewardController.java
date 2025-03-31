@@ -32,4 +32,10 @@ public class AdminRewardController {
                 .body(rewardService.createReward(rewardRequest));
     }
 
+    @PostMapping("{id}")
+    public ResponseEntity<RewardResponse> updateReward(@RequestBody @Valid RewardRequest rewardRequest,
+                                                       @PathVariable Long id) {
+        return ResponseEntity
+                .ok(rewardService.updateReward(rewardRequest,id));
+    }
 }

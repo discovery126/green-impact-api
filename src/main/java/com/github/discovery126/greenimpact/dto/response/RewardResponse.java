@@ -22,6 +22,7 @@ public class RewardResponse {
 
     private String description;
 
+    @JsonProperty("reward_type")
     private String type;
 
     private Integer amount;
