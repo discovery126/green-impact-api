@@ -1,8 +1,6 @@
 package com.github.discovery126.greenimpact.repository;
 
 import com.github.discovery126.greenimpact.model.TakenTask;
-import com.github.discovery126.greenimpact.model.Task;
-import com.github.discovery126.greenimpact.model.TaskType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

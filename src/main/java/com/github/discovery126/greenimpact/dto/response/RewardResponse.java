@@ -2,7 +2,6 @@ package com.github.discovery126.greenimpact.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.discovery126.greenimpact.model.RewardCategory;
-import com.github.discovery126.greenimpact.model.RewardType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

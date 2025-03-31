@@ -27,8 +27,8 @@ public class S3Config {
     @Bean
     public S3Client s3Client() {
         return S3Client.builder()
-                .endpointOverride(URI.create("https://hb.ru-msk.vkcloud-storage.ru")) // VK Cloud API
-                .region(Region.of("ru-msk")) // Регион
+                .endpointOverride(URI.create("https://hb.ru-msk.vkcloud-storage.ru"))
+                .region(Region.of("ru-msk"))
                 .credentialsProvider(StaticCredentialsProvider.create(
                         AwsBasicCredentials.create(accessKey, secretKey)
                 ))
