@@ -1,13 +1,14 @@
 package com.github.discovery126.greenimpact.controller;
 
+import com.github.discovery126.greenimpact.dto.request.TaskRequest;
 import com.github.discovery126.greenimpact.dto.response.TaskResponse;
 import com.github.discovery126.greenimpact.service.TaskService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,5 +24,11 @@ public class AdminTaskController {
     public ResponseEntity<List<TaskResponse>> getAllTasks() {
         return ResponseEntity
                 .ok(taskService.getAllTasks());
+    }
+    @PostMapping
+    public ResponseEntity<TaskResponse> createTask(@Valid @RequestBody TaskRequest taskRequest) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(taskService.createTask(taskRequest));
     }
 }
