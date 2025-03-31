@@ -5,15 +5,15 @@ import com.github.discovery126.greenimpact.dto.response.TaskResponse;
 import com.github.discovery126.greenimpact.exception.TaskNotFoundException;
 import com.github.discovery126.greenimpact.exception.UserNotFoundException;
 import com.github.discovery126.greenimpact.mapper.TaskMapper;
-import com.github.discovery126.greenimpact.model.*;
+import com.github.discovery126.greenimpact.model.Task;
+import com.github.discovery126.greenimpact.model.TaskCategory;
+import com.github.discovery126.greenimpact.model.TaskType;
 import com.github.discovery126.greenimpact.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.github.discovery126.greenimpact.utils.UpdateUtils.updateFieldIfChanged;
 
@@ -73,5 +73,12 @@ public class TaskService {
         } else {
             throw new UserNotFoundException("Задание с id %d не найдено".formatted(taskId));
         }
+    }
+
+    public List<TaskResponse> getTasksForCurrentUser(Long userId) {
+        return taskRepository.findAllTaskForUser(userId)
+                .stream()
+                .map(taskMapper::toResponse)
+                .toList();
     }
 }

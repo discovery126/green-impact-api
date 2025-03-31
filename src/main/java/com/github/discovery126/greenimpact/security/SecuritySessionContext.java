@@ -1,12 +1,18 @@
 package com.github.discovery126.greenimpact.security;
 
 import com.github.discovery126.greenimpact.exception.UnauthorizedException;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SecuritySessionContext {
+
+    public Boolean isUserLoggedIn() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null && !(authentication instanceof AnonymousAuthenticationToken);
+    }
 
     public String getEmail() throws UnauthorizedException {
 

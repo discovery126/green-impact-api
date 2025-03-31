@@ -9,6 +9,7 @@ public class TaskMapper {
 
     public TaskResponse toResponse(Task task) {
         return TaskResponse.builder()
+                .id(task.getId())
                 .title(task.getTitle())
                 .description(task.getDescription())
                 .points(task.getPoints())

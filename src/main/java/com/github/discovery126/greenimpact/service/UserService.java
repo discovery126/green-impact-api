@@ -3,6 +3,7 @@ package com.github.discovery126.greenimpact.service;
 import com.github.discovery126.greenimpact.dto.RegisterDto;
 import com.github.discovery126.greenimpact.dto.request.UserRequest;
 import com.github.discovery126.greenimpact.dto.request.UserUpdateRequest;
+import com.github.discovery126.greenimpact.dto.response.TaskResponse;
 import com.github.discovery126.greenimpact.dto.response.UserResponse;
 import com.github.discovery126.greenimpact.exception.UserNotFoundException;
 import com.github.discovery126.greenimpact.exception.UsernameAlreadyExistsException;
@@ -11,6 +12,7 @@ import com.github.discovery126.greenimpact.model.City;
 import com.github.discovery126.greenimpact.model.Role;
 import com.github.discovery126.greenimpact.model.User;
 import com.github.discovery126.greenimpact.repository.UserRepository;
+import com.github.discovery126.greenimpact.security.SecuritySessionContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,8 +38,12 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final SecuritySessionContext securitySessionContext;
+
     private final CityService cityService;
     private final RoleService roleService;
+    private final TaskService taskService;
+
     private final UserMapper userMapper;
 
     public void register(RegisterDto registerDto) {
@@ -143,5 +150,13 @@ public class UserService {
         Optional<User> existedUser = userRepository.findByDisplayName(displayName);
         if (existedUser.isPresent())
             throw new UsernameAlreadyExistsException("Username is already taken");
+    }
+
+    public List<TaskResponse> getTasksForCurrentUserOrAll() {
+        if (!securitySessionContext.isUserLoggedIn()) {
+            return taskService.getAllTasks();
+        } else {
+            return taskService.getTasksForCurrentUser(securitySessionContext.getId());
+        }
     }
 }
