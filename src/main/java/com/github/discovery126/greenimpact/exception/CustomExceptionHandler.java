@@ -41,14 +41,16 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             RewardCategoryNotFoundException.class,
             RewardNotFoundException.class,
             TaskCategoryNotFoundException.class,
-            TaskNotFoundException.class})
+            TaskNotFoundException.class,
+            PhotoNotFoundException.class})
     protected ResponseEntity<ErrorDto> handleNotFoundException(RuntimeException ex) {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorDto(List.of(ex.getMessage())));
     }
 
-    @ExceptionHandler(NotFoundOpenCageApiException.class)
+    @ExceptionHandler({NotFoundOpenCageApiException.class,
+            FileStorageException .class})
     protected ResponseEntity<ErrorDto> handleNotFoundOpenCageApiException(NotFoundOpenCageApiException ex) {
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

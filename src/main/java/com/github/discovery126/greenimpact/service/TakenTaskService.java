@@ -37,4 +37,8 @@ public class TakenTaskService {
         );
 
     }
+
+    public TakenTask getTaskByUserIdAndTaskId(Long userId, Long taskId) {
+        return takenTaskRepository.findByUserIdAndTaskId(userId,taskId);
+    }
 }

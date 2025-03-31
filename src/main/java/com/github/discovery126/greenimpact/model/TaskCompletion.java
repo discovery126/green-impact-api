@@ -24,6 +24,7 @@ public class TaskCompletion {
     private String description;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private TaskCompletionStatus status;
 
     @Column(name = "completed_at")
@@ -43,5 +44,4 @@ public class TaskCompletion {
 
     @OneToMany(mappedBy = "taskCompletion", cascade = CascadeType.ALL)
     private List<TaskProof> taskProof;
-
 }

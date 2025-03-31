@@ -16,4 +16,5 @@ FROM tasks t
 WHERE t.type = :type;""",nativeQuery = true)
     List<TakenTask> findAllTakenTaskByUserIdAndType(@Param("user_id") Long userId, @Param("type")String taskType);
     boolean existsByUserIdAndTaskId(Long userId, Long taskId);
+    TakenTask findByUserIdAndTaskId(Long userId, Long taskId);
 }
