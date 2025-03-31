@@ -51,7 +51,8 @@ public class Event {
     private Integer houseNumber;
 
     @Column(nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private EventStatus status;
 
     @Column(nullable = false)
     private BigDecimal latitude;

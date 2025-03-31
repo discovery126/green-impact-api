@@ -1,6 +1,6 @@
 package com.github.discovery126.greenimpact.service;
 
-import com.github.discovery126.greenimpact.dto.EventStatus;
+import com.github.discovery126.greenimpact.model.EventStatus;
 import com.github.discovery126.greenimpact.dto.request.EventRequest;
 import com.github.discovery126.greenimpact.dto.response.EventResponse;
 import com.github.discovery126.greenimpact.exception.EventNotFoundException;
@@ -45,7 +45,7 @@ public class EventService {
                 .startDate(eventRequest.getStartDate())
                 .endDate(eventRequest.getEndDate())
                 .eventPoints(eventRequest.getEventPoints())
-                .status(eventStatus.name().toLowerCase())
+                .status(eventStatus)
                 .eventCode(eventRequest.getEventCode())
                 .latitude(geometry.getLatitude())
                 .longitude(geometry.getLongitude())

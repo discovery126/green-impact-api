@@ -20,7 +20,7 @@ public class EventMapper {
                 .startDate(event.getStartDate())
                 .endDate(event.getEndDate())
                 .eventPoints(event.getEventPoints())
-                .status(event.getStatus().toLowerCase())
+                .status(event.getStatus().name())
                 .eventCode(event.getEventCode())
                 .latitude(event.getLatitude())
                 .longitude(event.getLongitude())
