@@ -31,4 +31,11 @@ public class AdminTaskController {
                 .status(HttpStatus.CREATED)
                 .body(taskService.createTask(taskRequest));
     }
+
+    @PostMapping("{id}")
+    public ResponseEntity<TaskResponse> updateTask(@Valid @RequestBody TaskRequest taskRequest,
+                                                   @PathVariable Long id) {
+        return ResponseEntity
+                .ok(taskService.updateTask(taskRequest,id));
+    }
 }
