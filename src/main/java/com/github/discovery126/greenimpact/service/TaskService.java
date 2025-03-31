@@ -66,4 +66,12 @@ public class TaskService {
 
         return taskMapper.toResponse(taskRepository.save(task));
     }
+
+    public void deleteTask(Long taskId) {
+        if (taskRepository.existsById(taskId)) {
+            taskRepository.deleteById(taskId);
+        } else {
+            throw new UserNotFoundException("Задание с id %d не найдено".formatted(taskId));
+        }
+    }
 }

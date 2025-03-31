@@ -38,4 +38,11 @@ public class AdminTaskController {
         return ResponseEntity
                 .ok(taskService.updateTask(taskRequest,id));
     }
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        taskService.deleteTask(id);
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
 }
