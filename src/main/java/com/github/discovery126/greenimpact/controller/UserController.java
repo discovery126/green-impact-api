@@ -27,6 +27,7 @@ public class UserController {
     private final TakenTaskService takenTaskService;
     private final S3Service s3Service;
     private final RewardService rewardService;
+    private final EventService eventService;
 
 
     @PreAuthorize("hasAuthority('USER')")
@@ -75,6 +76,14 @@ public class UserController {
     @PostMapping("rewards/{rewardId}/claim")
     public ResponseEntity<Void> claimReward(@PathVariable Long rewardId) {
         rewardService.claimReward(rewardId);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .build();
+    }
+    @PreAuthorize("hasAuthority('USER')")
+    @PostMapping("events/{eventId}/register")
+    public ResponseEntity<Void> registerEvent(@PathVariable Long eventId) {
+        eventService.registerEvent(eventId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .build();

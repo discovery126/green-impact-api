@@ -1,13 +1,16 @@
 package com.github.discovery126.greenimpact.service;
 
-import com.github.discovery126.greenimpact.model.EventStatus;
 import com.github.discovery126.greenimpact.dto.request.EventRequest;
 import com.github.discovery126.greenimpact.dto.response.EventResponse;
 import com.github.discovery126.greenimpact.exception.EventNotFoundException;
+import com.github.discovery126.greenimpact.exception.UserAlreadyRegisteredEventException;
+import com.github.discovery126.greenimpact.exception.UserNotFoundException;
 import com.github.discovery126.greenimpact.mapper.EventMapper;
-import com.github.discovery126.greenimpact.model.City;
-import com.github.discovery126.greenimpact.model.Event;
+import com.github.discovery126.greenimpact.model.*;
 import com.github.discovery126.greenimpact.repository.EventRepository;
+import com.github.discovery126.greenimpact.repository.UserEventRepository;
+import com.github.discovery126.greenimpact.repository.UserRepository;
+import com.github.discovery126.greenimpact.security.SecuritySessionContext;
 import com.github.discovery126.greenimpact.utils.Geometry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,9 @@ public class EventService {
 
     private final CityService cityService;
     private final OpenCageService openCageService;
+    private final SecuritySessionContext securitySessionContext;
+    private final UserRepository userRepository;
+    private final UserEventRepository userEventRepository;
 
     public EventResponse createEvent(EventRequest eventRequest) {
         City city = cityService.getCity(eventRequest.getCityId());
@@ -118,5 +124,23 @@ public class EventService {
                 .filter(event -> event.getStatus().equals(EventStatus.SCHEDULED))
                 .map(eventMapper::toResponse)
                 .toList();
+    }
+
+    public void registerEvent(Long eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new UserNotFoundException("Мероприятие с id %d не найдено".formatted(eventId)));
+        User user = userRepository.findById(securitySessionContext.getId())
+                .orElseThrow(() -> new UserNotFoundException("Пользователь с id %d не найден"
+                        .formatted(eventId)));
+        if (userEventRepository.existsByUserIdAndEventId(securitySessionContext.getId(),eventId)) {
+            throw new UserAlreadyRegisteredEventException("Пользователь %d уже зарегистрирован"
+                    .formatted(securitySessionContext.getId()));
+        }
+        UserEvent userEvent = UserEvent.builder()
+                .user(user)
+                .event(event)
+                .build();
+
+        userEventRepository.save(userEvent);
     }
 }
