@@ -71,4 +71,11 @@ public class TaskCompletionService {
                 .map(taskCompletionMapper::toResponse)
                 .toList();
     }
+
+    public List<TaskCompletionResponse> getAllTaskCompletion() {
+        return taskCompletionRepository.findAll()
+                .stream()
+                .map(taskCompletionMapper::toResponse)
+                .toList();
+    }
 }

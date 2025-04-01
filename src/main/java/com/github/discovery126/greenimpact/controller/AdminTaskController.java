@@ -1,7 +1,9 @@
 package com.github.discovery126.greenimpact.controller;
 
 import com.github.discovery126.greenimpact.dto.request.TaskRequest;
+import com.github.discovery126.greenimpact.dto.response.TaskCompletionResponse;
 import com.github.discovery126.greenimpact.dto.response.TaskResponse;
+import com.github.discovery126.greenimpact.service.TaskCompletionService;
 import com.github.discovery126.greenimpact.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import java.util.List;
 public class AdminTaskController {
 
     private final TaskService taskService;
+    private final TaskCompletionService taskCompletionService;
 
     @GetMapping
     public ResponseEntity<List<TaskResponse>> getAllTasks() {
@@ -44,5 +47,10 @@ public class AdminTaskController {
         return ResponseEntity
                 .noContent()
                 .build();
+    }
+    @GetMapping("/completed-tasks")
+    public ResponseEntity<List<TaskCompletionResponse>> getCompletedTasks() {
+        return ResponseEntity
+                .ok(taskCompletionService.getAllTaskCompletion());
     }
 }
