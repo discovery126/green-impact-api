@@ -3,12 +3,14 @@ package com.github.discovery126.greenimpact.service;
 import com.github.discovery126.greenimpact.dto.request.RewardRequest;
 import com.github.discovery126.greenimpact.dto.response.RewardResponse;
 import com.github.discovery126.greenimpact.exception.RewardNotFoundException;
+import com.github.discovery126.greenimpact.exception.RewardOutOfStockException;
 import com.github.discovery126.greenimpact.exception.UserNotFoundException;
 import com.github.discovery126.greenimpact.mapper.RewardMapper;
-import com.github.discovery126.greenimpact.model.Reward;
-import com.github.discovery126.greenimpact.model.RewardCategory;
-import com.github.discovery126.greenimpact.model.RewardType;
+import com.github.discovery126.greenimpact.model.*;
 import com.github.discovery126.greenimpact.repository.RewardRepository;
+import com.github.discovery126.greenimpact.repository.UserRepository;
+import com.github.discovery126.greenimpact.repository.UserRewardRepository;
+import com.github.discovery126.greenimpact.security.SecuritySessionContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,11 @@ public class RewardService {
     private final RewardCategoryService rewardCategoryService;
 
     private final RewardMapper rewardMapper;
+    private final UserRepository userRepository;
+
+    private final SecuritySessionContext securitySessionContext;
+    private final PromoCodeService promoCodeService;
+    private final UserRewardRepository userRewardRepository;
 
     public List<RewardResponse> getAllRewards() {
         return rewardRepository.findAll()
@@ -75,6 +82,28 @@ public class RewardService {
             throw new UserNotFoundException("Награда с id %d не найдена".formatted(rewardId));
         }
     }
+    public void claimReward(Long rewardId) {
+        Reward reward = rewardRepository.findById(rewardId)
+                .orElseThrow(() -> new UserNotFoundException("Награда с id %d не найдено".formatted(rewardId)));
+        User user = userRepository.findById(securitySessionContext.getId())
+                .orElseThrow(() -> new UserNotFoundException("Пользователь с id %d не найден"
+                        .formatted(rewardId)));
+        if (reward.getAmount().equals(0)) {
+            throw new RewardOutOfStockException("Награды данного типа закончились");
+        }
+        String promoCode = promoCodeService.generatePromoCode();
+        UserReward userReward = UserReward.builder()
+                .user(user)
+                .reward(reward)
+                .promoCode(promoCode)
+                .status(UserRewardStatus.REDEEMED)
+                .build();
+        reward.setAmount(reward.getAmount()-1);
+
+        rewardRepository.save(reward);
+        userRewardRepository.save(userReward);
+    }
+
     public List<RewardResponse> getAllAvailableRewards() {
         return rewardRepository.findAll()
                 .stream()

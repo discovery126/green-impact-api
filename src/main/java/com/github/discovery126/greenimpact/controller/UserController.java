@@ -4,10 +4,7 @@ package com.github.discovery126.greenimpact.controller;
 import com.github.discovery126.greenimpact.dto.request.CompleteTaskRequest;
 import com.github.discovery126.greenimpact.dto.response.TaskResponse;
 import com.github.discovery126.greenimpact.exception.FileStorageException;
-import com.github.discovery126.greenimpact.service.S3Service;
-import com.github.discovery126.greenimpact.service.TakenTaskService;
-import com.github.discovery126.greenimpact.service.TaskService;
-import com.github.discovery126.greenimpact.service.UserService;
+import com.github.discovery126.greenimpact.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,6 +25,7 @@ public class UserController {
     private final TaskService taskService;
     private final TakenTaskService takenTaskService;
     private final S3Service s3Service;
+    private final RewardService rewardService;
 
     @GetMapping("/tasks")
     public ResponseEntity<List<TaskResponse>> getTasks() {
@@ -62,5 +60,15 @@ public class UserController {
         } catch (IOException e) {
             throw new FileStorageException("Неизвестная ошибка с файлами");
         }
+    }
+    // Rewards
+
+    @PreAuthorize("hasAuthority('USER')")
+    @PostMapping("rewards/{rewardId}/claim")
+    public ResponseEntity<Void> claimReward(@PathVariable Long rewardId) {
+        rewardService.claimReward(rewardId);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .build();
     }
 }

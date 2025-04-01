@@ -31,6 +31,7 @@ public class UserReward {
     private String promoCode;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private UserRewardStatus status;
 
     @Column(name = "issued_at")

@@ -19,7 +19,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({UsernameAlreadyExistsException.class,
             EmailAlreadyExistsException.class,
-            TaskAlreadyTakenException.class})
+            TaskAlreadyTakenException.class,
+            RewardOutOfStockException.class})
     protected ResponseEntity<ErrorDto> handleExistsException(RuntimeException ex) {
 
         return ResponseEntity.status(HttpStatus.CONFLICT)
