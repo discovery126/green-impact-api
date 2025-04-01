@@ -1,13 +1,6 @@
-package com.github.discovery126.greenimpact.dto.request;
+package com.github.discovery126.greenimpact.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.discovery126.greenimpact.dto.response.EventResponse;
-import com.github.discovery126.greenimpact.dto.response.UserResponse;
-import com.github.discovery126.greenimpact.model.Event;
-import com.github.discovery126.greenimpact.model.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,8 +15,10 @@ import java.time.LocalDateTime;
 public class UserEventResponse {
     private long id;
 
+    @JsonProperty("user")
     private UserResponse userResponse;
 
+    @JsonProperty("event")
     private EventResponse eventResponse;
 
     @JsonProperty("registered_at")

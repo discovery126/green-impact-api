@@ -1,7 +1,7 @@
 package com.github.discovery126.greenimpact.mapper;
 
-import com.github.discovery126.greenimpact.dto.request.UserEventResponse;
 import com.github.discovery126.greenimpact.dto.response.EventResponse;
+import com.github.discovery126.greenimpact.dto.response.UserEventResponse;
 import com.github.discovery126.greenimpact.model.Event;
 import com.github.discovery126.greenimpact.model.UserEvent;
 import lombok.RequiredArgsConstructor;

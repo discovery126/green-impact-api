@@ -36,5 +36,5 @@ public class UserReward {
 
     @Column(name = "issued_at")
     @Builder.Default
-    private LocalDateTime receivedAt = LocalDateTime.now();
+    private LocalDateTime issuedAt = LocalDateTime.now();
 }

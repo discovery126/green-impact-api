@@ -1,6 +1,6 @@
 package com.github.discovery126.greenimpact.service;
 
-import com.github.discovery126.greenimpact.dto.request.UserEventResponse;
+import com.github.discovery126.greenimpact.dto.response.UserEventResponse;
 import com.github.discovery126.greenimpact.mapper.EventMapper;
 import com.github.discovery126.greenimpact.repository.UserEventRepository;
 import com.github.discovery126.greenimpact.security.SecuritySessionContext;
