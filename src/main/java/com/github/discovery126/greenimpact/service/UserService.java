@@ -159,4 +159,11 @@ public class UserService {
             return taskService.getTasksForCurrentUser(securitySessionContext.getId());
         }
     }
+
+    public UserResponse getUser() {
+        Optional<User> userOptional = userRepository.findById(securitySessionContext.getId());
+        if (userOptional.isEmpty())
+            throw new UserNotFoundException("Пользователя не существует");
+        return userMapper.toResponse(userOptional.get());
+    }
 }
