@@ -75,4 +75,11 @@ public class RewardService {
             throw new UserNotFoundException("Награда с id %d не найдена".formatted(rewardId));
         }
     }
+    public List<RewardResponse> getAllAvailableRewards() {
+        return rewardRepository.findAll()
+                .stream()
+                .filter(reward -> reward.getAmount() > 0)
+                .map(rewardMapper::toResponse)
+                .toList();
+    }
 }
