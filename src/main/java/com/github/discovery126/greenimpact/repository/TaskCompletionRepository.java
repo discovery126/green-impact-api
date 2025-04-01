@@ -5,8 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface TaskCompletionRepository extends JpaRepository<TaskCompletion, Long> {
-    boolean existsByUserIdAndTaskId(Long userId, Long taskId);
     @Query(value = """
 
             SELECT EXISTS (
@@ -17,4 +18,6 @@ public interface TaskCompletionRepository extends JpaRepository<TaskCompletion, 
               AND tc.completed_at::DATE = CURRENT_DATE);""",nativeQuery = true)
     boolean existsByUserIdAndTaskIdAndDate(@Param("userId") Long userId,
                                            @Param("taskId") Long taskId);
+
+    List<TaskCompletion> findAllByUserId(Long userId);
 }

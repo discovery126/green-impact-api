@@ -1,13 +1,15 @@
 package com.github.discovery126.greenimpact.service;
 
 import com.github.discovery126.greenimpact.dto.request.CompleteTaskRequest;
+import com.github.discovery126.greenimpact.dto.response.TaskCompletionResponse;
+import com.github.discovery126.greenimpact.dto.response.UserRewardResponse;
 import com.github.discovery126.greenimpact.exception.TaskAlreadyTakenException;
 import com.github.discovery126.greenimpact.exception.UserNotFoundException;
+import com.github.discovery126.greenimpact.mapper.RewardMapper;
+import com.github.discovery126.greenimpact.mapper.TaskCompletionMapper;
 import com.github.discovery126.greenimpact.model.*;
-import com.github.discovery126.greenimpact.repository.TakenTaskRepository;
-import com.github.discovery126.greenimpact.repository.TaskCompletionRepository;
-import com.github.discovery126.greenimpact.repository.TaskRepository;
-import com.github.discovery126.greenimpact.repository.UserRepository;
+import com.github.discovery126.greenimpact.repository.*;
+import com.github.discovery126.greenimpact.security.SecuritySessionContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,25 +22,27 @@ public class TaskCompletionService {
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
     private final TakenTaskRepository takenTaskRepository;
+    private final TaskCompletionMapper taskCompletionMapper;
+    private final SecuritySessionContext securitySessionContext;
+
 
     public void saveCompletion(CompleteTaskRequest completeTaskRequest,
-                               Long userId,
                                Long taskId,
                                List<String> fileUrls
     ) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new UserNotFoundException("Задание с id %d не найдено".formatted(taskId)));
-        User user = userRepository.findById(userId)
+        User user = userRepository.findById(securitySessionContext.getId())
                 .orElseThrow(() -> new UserNotFoundException("Пользователь с id %d не найден"
-                        .formatted(userId)));
+                        .formatted(securitySessionContext.getId())));
 
         if (task.getTaskType() == TaskType.LIMITED &&
-                takenTaskRepository.existsByUserIdAndTaskId(userId, taskId)) {
+                takenTaskRepository.existsByUserIdAndTaskId(securitySessionContext.getId(), taskId)) {
             throw new TaskAlreadyTakenException("Такое задание уже выполнено");
         }
 
         if (task.getTaskType() == TaskType.DAILY &&
-                taskCompletionRepository.existsByUserIdAndTaskIdAndDate(userId, taskId)) {
+                taskCompletionRepository.existsByUserIdAndTaskIdAndDate(securitySessionContext.getId(), taskId)) {
             throw new TaskAlreadyTakenException("Такое задание уже выполнено сегодня");
         }
 
@@ -56,8 +60,15 @@ public class TaskCompletionService {
                         .build())
                 .toList();
 
-        taskCompletion.setTaskProof(taskProofs);
+        taskCompletion.setTaskProofs(taskProofs);
 
         taskCompletionRepository.save(taskCompletion);
+    }
+
+    public List<TaskCompletionResponse> getUserTaskCompletion() {
+        return taskCompletionRepository.findAllByUserId(securitySessionContext.getId())
+                .stream()
+                .map(taskCompletionMapper::toResponse)
+                .toList();
     }
 }

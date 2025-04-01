@@ -47,5 +47,5 @@ public class TaskCompletion {
     private User admin;
 
     @OneToMany(mappedBy = "taskCompletion", cascade = CascadeType.ALL)
-    private List<TaskProof> taskProof;
+    private List<TaskProof> taskProofs;
 }

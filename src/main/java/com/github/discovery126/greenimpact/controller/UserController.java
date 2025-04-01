@@ -2,10 +2,7 @@ package com.github.discovery126.greenimpact.controller;
 
 
 import com.github.discovery126.greenimpact.dto.request.CompleteTaskRequest;
-import com.github.discovery126.greenimpact.dto.response.TaskResponse;
-import com.github.discovery126.greenimpact.dto.response.UserEventResponse;
-import com.github.discovery126.greenimpact.dto.response.UserResponse;
-import com.github.discovery126.greenimpact.dto.response.UserRewardResponse;
+import com.github.discovery126.greenimpact.dto.response.*;
 import com.github.discovery126.greenimpact.exception.FileStorageException;
 import com.github.discovery126.greenimpact.service.*;
 import jakarta.validation.Valid;
@@ -32,6 +29,7 @@ public class UserController {
     private final EventService eventService;
     private final UserEventService userEventService;
     private final UserRewardService userRewardService;
+    private final TaskCompletionService taskCompletionService;
 
 
     @PreAuthorize("hasAuthority('USER')")
@@ -51,6 +49,12 @@ public class UserController {
     public ResponseEntity<List<UserRewardResponse>> getUserRewards() {
         return ResponseEntity
                 .ok(userRewardService.getUserRewards());
+    }
+    @PreAuthorize("hasAuthority('USER')")
+    @GetMapping("/completed-tasks")
+    public ResponseEntity<List<TaskCompletionResponse>> getCompletedTasks() {
+        return ResponseEntity
+                .ok(taskCompletionService.getUserTaskCompletion());
     }
 
     @GetMapping("/tasks")

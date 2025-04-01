@@ -73,7 +73,6 @@ public class S3Service {
             index += 1;
         }
         taskCompletionService.saveCompletion(completeTaskRequest,
-                securitySessionContext.getId(),
                 taskId,
                 fileUrls);
 

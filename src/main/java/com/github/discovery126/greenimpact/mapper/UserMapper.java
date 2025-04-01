@@ -15,6 +15,8 @@ public class UserMapper {
     private final RoleMapper roleMapper;
 
     public UserResponse toResponse(User user) {
+        if (user == null)
+            return null;
 
         return UserResponse.builder()
                 .id(user.getId())
