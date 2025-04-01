@@ -1,6 +1,5 @@
 package com.github.discovery126.greenimpact.service;
 
-import com.github.discovery126.greenimpact.model.PromoCodeGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
