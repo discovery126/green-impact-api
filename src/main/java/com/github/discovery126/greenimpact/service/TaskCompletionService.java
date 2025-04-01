@@ -2,17 +2,21 @@ package com.github.discovery126.greenimpact.service;
 
 import com.github.discovery126.greenimpact.dto.request.CompleteTaskRequest;
 import com.github.discovery126.greenimpact.dto.response.TaskCompletionResponse;
-import com.github.discovery126.greenimpact.dto.response.UserRewardResponse;
+import com.github.discovery126.greenimpact.exception.TaskAlreadyAnsweredException;
 import com.github.discovery126.greenimpact.exception.TaskAlreadyTakenException;
+import com.github.discovery126.greenimpact.exception.TaskNotFoundException;
 import com.github.discovery126.greenimpact.exception.UserNotFoundException;
-import com.github.discovery126.greenimpact.mapper.RewardMapper;
 import com.github.discovery126.greenimpact.mapper.TaskCompletionMapper;
 import com.github.discovery126.greenimpact.model.*;
-import com.github.discovery126.greenimpact.repository.*;
+import com.github.discovery126.greenimpact.repository.TakenTaskRepository;
+import com.github.discovery126.greenimpact.repository.TaskCompletionRepository;
+import com.github.discovery126.greenimpact.repository.TaskRepository;
+import com.github.discovery126.greenimpact.repository.UserRepository;
 import com.github.discovery126.greenimpact.security.SecuritySessionContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -77,5 +81,27 @@ public class TaskCompletionService {
                 .stream()
                 .map(taskCompletionMapper::toResponse)
                 .toList();
+    }
+
+    public TaskCompletionResponse answerCompletionTask(Long taskCompletionId, TaskCompletionStatus status) {
+        TaskCompletion taskCompletion = taskCompletionRepository.findById(taskCompletionId)
+                .orElseThrow(() -> new TaskNotFoundException("Выполненное задание с id %d не найдено"
+                        .formatted(taskCompletionId)));
+
+        User admin = userRepository.findById(securitySessionContext.getId())
+                .orElseThrow(() -> new UserNotFoundException("Админ с таким id %d не найден"
+                        .formatted(securitySessionContext.getId())));
+        if (taskCompletion.getAdmin() != null && !taskCompletion.getAdmin().equals(admin)) {
+            throw new TaskAlreadyTakenException("Другой админ занимается этой проверкой");
+        }
+        if (taskCompletion.getStatus() == TaskCompletionStatus.CONFIRMED) {
+            throw new TaskAlreadyAnsweredException("Это задание уже проверенно");
+        }
+        taskCompletion.setStatus(status);
+        taskCompletion.setAdmin(admin);
+        taskCompletion.setVerifiedAt(LocalDateTime.now());
+        taskCompletion.getUser().setPoints(taskCompletion.getUser().getPoints() + taskCompletion.getTask().getPoints());
+        return taskCompletionMapper.toResponse(taskCompletionRepository.save(taskCompletion));
+
     }
 }

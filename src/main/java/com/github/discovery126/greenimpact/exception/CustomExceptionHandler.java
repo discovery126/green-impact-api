@@ -46,7 +46,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             TaskCategoryNotFoundException.class,
             TaskNotFoundException.class,
             PhotoNotFoundException.class,
-            BadEventCodeException.class})
+            BadEventCodeException.class,
+            TaskAlreadyAnsweredException.class})
     protected ResponseEntity<ErrorDto> handleNotFoundException(RuntimeException ex) {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
