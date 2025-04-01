@@ -1,11 +1,11 @@
 package com.github.discovery126.greenimpact.service;
 
 import com.github.discovery126.greenimpact.dto.request.EventRequest;
+import com.github.discovery126.greenimpact.dto.request.UserEventResponse;
 import com.github.discovery126.greenimpact.dto.response.EventResponse;
-import com.github.discovery126.greenimpact.exception.EventNotFoundException;
-import com.github.discovery126.greenimpact.exception.UserAlreadyRegisteredEventException;
-import com.github.discovery126.greenimpact.exception.UserNotFoundException;
+import com.github.discovery126.greenimpact.exception.*;
 import com.github.discovery126.greenimpact.mapper.EventMapper;
+import com.github.discovery126.greenimpact.mapper.UserMapper;
 import com.github.discovery126.greenimpact.model.*;
 import com.github.discovery126.greenimpact.repository.EventRepository;
 import com.github.discovery126.greenimpact.repository.UserEventRepository;
@@ -15,6 +15,7 @@ import com.github.discovery126.greenimpact.utils.Geometry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -27,6 +28,7 @@ public class EventService {
     private final EventRepository eventRepository;
 
     private final EventMapper eventMapper;
+    private final UserMapper userMapper;
 
     private final CityService cityService;
     private final OpenCageService openCageService;
@@ -128,7 +130,7 @@ public class EventService {
 
     public void registerEvent(Long eventId) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new UserNotFoundException("Мероприятие с id %d не найдено".formatted(eventId)));
+                .orElseThrow(() -> new EventNotFoundException("Мероприятие с id %d не найдено".formatted(eventId)));
         User user = userRepository.findById(securitySessionContext.getId())
                 .orElseThrow(() -> new UserNotFoundException("Пользователь с id %d не найден"
                         .formatted(eventId)));
@@ -142,5 +144,32 @@ public class EventService {
                 .build();
 
         userEventRepository.save(userEvent);
+    }
+    public UserEventResponse confirmEvent(Long eventId, String eventCode) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EventNotFoundException("Мероприятие с id %d не найдено".formatted(eventId)));
+        if (!event.getEventCode().equals(eventCode)) {
+            throw new BadEventCodeException("Код неправильный");
+        }
+        UserEvent userEvent = userEventRepository.findByUserIdAndEventId(securitySessionContext.getId(),eventId);
+        if (userEvent.getConfirmedAt() != null) {
+            throw new UserAlreadyConfirmException("Вы уже подтвердили участие в мероприятие");
+        }
+        User user = userRepository.findById(securitySessionContext.getId())
+                .orElseThrow(() -> new UserNotFoundException("Пользователь с id %d не найден"
+                        .formatted(eventId)));
+
+        userEvent.setConfirmedAt(LocalDateTime.now());
+        user.setPoints(user.getPoints() + event.getEventPoints());
+        userEventRepository.save(userEvent);
+
+        return UserEventResponse.builder()
+                .id(userEvent.getId())
+                .userResponse(userMapper.toResponse(user))
+                .eventResponse(eventMapper.toResponse(event))
+                .registeredAt(userEvent.getRegisteredAt())
+                .confirmedAt(userEvent.getConfirmedAt())
+                .build();
+
     }
 }

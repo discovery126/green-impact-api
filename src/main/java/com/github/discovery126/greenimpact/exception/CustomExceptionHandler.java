@@ -21,7 +21,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             EmailAlreadyExistsException.class,
             TaskAlreadyTakenException.class,
             RewardOutOfStockException.class,
-            UserAlreadyRegisteredEventException.class})
+            UserAlreadyRegisteredEventException.class,
+            UserAlreadyConfirmException.class})
     protected ResponseEntity<ErrorDto> handleExistsException(RuntimeException ex) {
 
         return ResponseEntity.status(HttpStatus.CONFLICT)
@@ -44,7 +45,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             RewardNotFoundException.class,
             TaskCategoryNotFoundException.class,
             TaskNotFoundException.class,
-            PhotoNotFoundException.class})
+            PhotoNotFoundException.class,
+            BadEventCodeException.class})
     protected ResponseEntity<ErrorDto> handleNotFoundException(RuntimeException ex) {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)

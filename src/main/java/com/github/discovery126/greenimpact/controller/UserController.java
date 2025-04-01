@@ -2,6 +2,7 @@ package com.github.discovery126.greenimpact.controller;
 
 
 import com.github.discovery126.greenimpact.dto.request.CompleteTaskRequest;
+import com.github.discovery126.greenimpact.dto.request.UserEventResponse;
 import com.github.discovery126.greenimpact.dto.response.TaskResponse;
 import com.github.discovery126.greenimpact.dto.response.UserResponse;
 import com.github.discovery126.greenimpact.exception.FileStorageException;
@@ -87,5 +88,13 @@ public class UserController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .build();
+    }
+    @PreAuthorize("hasAuthority('USER')")
+    @PostMapping("events/{eventId}/confirm")
+    public ResponseEntity<UserEventResponse> confirmEvent(@PathVariable Long eventId,
+                                                          @RequestParam String eventCode) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(eventService.confirmEvent(eventId,eventCode));
     }
 }
