@@ -35,12 +35,16 @@ public class TaskCompletion {
     private LocalDateTime verifiedAt;
 
     @ManyToOne
-    @JoinColumn(name = "taken_task_id")
-    private TakenTask takenTask;
+    @JoinColumn(name = "task_id")
+    private Task task;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "verified_by")
-    private User user;
+    private User admin;
 
     @OneToMany(mappedBy = "taskCompletion", cascade = CascadeType.ALL)
     private List<TaskProof> taskProof;

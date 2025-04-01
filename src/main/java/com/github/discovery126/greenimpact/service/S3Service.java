@@ -4,7 +4,6 @@ import com.github.discovery126.greenimpact.config.S3Config;
 import com.github.discovery126.greenimpact.dto.request.CompleteTaskRequest;
 import com.github.discovery126.greenimpact.exception.PhotoNotFoundException;
 import com.github.discovery126.greenimpact.exception.TaskNotFoundException;
-import com.github.discovery126.greenimpact.repository.TaskCompletionRepository;
 import com.github.discovery126.greenimpact.repository.TaskRepository;
 import com.github.discovery126.greenimpact.security.SecuritySessionContext;
 import org.springframework.stereotype.Service;
@@ -12,11 +11,11 @@ import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -56,7 +55,9 @@ public class S3Service {
         List<String> fileUrls = new ArrayList<>();
         for (MultipartFile file : photos) {
             String photoFileName = UUID.randomUUID() + "_" + index;
-            String photoFileUrl = "uploads/user/%d/task/%d/%s.jpg".formatted(securitySessionContext.getId(), taskId, photoFileName); ;
+            String dateNowString = LocalDate.now().toString();
+            String photoFileUrl = "uploads/user/%d/task/%d/%s/%s.jpg"
+                    .formatted(securitySessionContext.getId(), taskId, dateNowString, photoFileName); ;
 
             Path tempFile = Files.createTempFile("upload", file.getOriginalFilename());
             file.transferTo(tempFile.toFile());

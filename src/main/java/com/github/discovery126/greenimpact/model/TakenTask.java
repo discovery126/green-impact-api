@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Builder
 @Data
@@ -30,5 +30,5 @@ public class TakenTask {
 
     @Column(name="taken_at")
     @Builder.Default
-    private LocalDateTime takenAt = LocalDateTime.now();
+    private LocalDate takenAt = LocalDate.now();
 }

@@ -26,8 +26,8 @@ public class UserController {
 
     private final UserService userService;
     private final TaskService taskService;
-    private final S3Service s3Service;
     private final TakenTaskService takenTaskService;
+    private final S3Service s3Service;
 
     @GetMapping("/tasks")
     public ResponseEntity<List<TaskResponse>> getTasks() {
