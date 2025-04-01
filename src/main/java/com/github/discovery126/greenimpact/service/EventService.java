@@ -111,4 +111,12 @@ public class EventService {
             throw new EventNotFoundException("Мероприятие с id %d не найдено".formatted(eventId));
         }
     }
+
+    public List<EventResponse> getAvailableEvents() {
+        return eventRepository.findAll()
+                .stream()
+                .filter(event -> event.getStatus().equals(EventStatus.SCHEDULED))
+                .map(eventMapper::toResponse)
+                .toList();
+    }
 }

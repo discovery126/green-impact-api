@@ -1,0 +1,1 @@
+ALTER TABLE public.users_events ALTER COLUMN confirmed_at DROP NOT NULL;

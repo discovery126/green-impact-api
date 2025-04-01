@@ -52,7 +52,11 @@ public class SecurityConfig {
        http
                .csrf(AbstractHttpConfigurer::disable)
                .authorizeHttpRequests((auth) ->
-                       auth.requestMatchers("/v1/register","/v1/user/tasks", "/error").permitAll()
+                       auth.requestMatchers("/v1/register",
+                                       "/v1/user/tasks",
+                                       "/v1/events",
+                                       "/v1/rewards",
+                                       "/error").permitAll()
                                .anyRequest().authenticated())
                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                .httpBasic(withDefaults());
