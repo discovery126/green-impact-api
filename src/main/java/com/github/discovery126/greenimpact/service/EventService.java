@@ -32,6 +32,7 @@ public class EventService {
 
     private final CityService cityService;
     private final OpenCageService openCageService;
+
     private final SecuritySessionContext securitySessionContext;
     private final UserRepository userRepository;
     private final UserEventRepository userEventRepository;
@@ -170,6 +171,5 @@ public class EventService {
                 .registeredAt(userEvent.getRegisteredAt())
                 .confirmedAt(userEvent.getConfirmedAt())
                 .build();
-
     }
 }

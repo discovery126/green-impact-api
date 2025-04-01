@@ -1,11 +1,17 @@
 package com.github.discovery126.greenimpact.mapper;
 
+import com.github.discovery126.greenimpact.dto.request.UserEventResponse;
 import com.github.discovery126.greenimpact.dto.response.EventResponse;
 import com.github.discovery126.greenimpact.model.Event;
+import com.github.discovery126.greenimpact.model.UserEvent;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class EventMapper {
+
+    private final UserMapper userMapper;
 
     public EventResponse toResponse(Event event) {
         return EventResponse.builder()
@@ -26,5 +32,15 @@ public class EventMapper {
                 .longitude(event.getLongitude())
                 .createdAt(event.getCreatedAt())
                 .build();
+    }
+    public UserEventResponse toUserEventResponse(UserEvent userEvent) {
+        return UserEventResponse.builder()
+                .id(userEvent.getId())
+                .eventResponse(toResponse(userEvent.getEvent()))
+                .userResponse(userMapper.toResponse(userEvent.getUser()))
+                .registeredAt(userEvent.getRegisteredAt())
+                .confirmedAt(userEvent.getConfirmedAt())
+                .build();
+
     }
 }

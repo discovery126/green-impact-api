@@ -3,6 +3,7 @@ package com.github.discovery126.greenimpact.controller;
 
 import com.github.discovery126.greenimpact.dto.request.CompleteTaskRequest;
 import com.github.discovery126.greenimpact.dto.request.UserEventResponse;
+import com.github.discovery126.greenimpact.dto.request.UserRewardResponse;
 import com.github.discovery126.greenimpact.dto.response.TaskResponse;
 import com.github.discovery126.greenimpact.dto.response.UserResponse;
 import com.github.discovery126.greenimpact.exception.FileStorageException;
@@ -29,6 +30,7 @@ public class UserController {
     private final S3Service s3Service;
     private final RewardService rewardService;
     private final EventService eventService;
+    private final UserEventService userEventService;
 
 
     @PreAuthorize("hasAuthority('USER')")
@@ -37,6 +39,13 @@ public class UserController {
         return ResponseEntity
                 .ok(userService.getUser());
     }
+    @PreAuthorize("hasAuthority('USER')")
+    @GetMapping("/events")
+    public ResponseEntity<List<UserEventResponse>> getUserEvents() {
+        return ResponseEntity
+                .ok(userEventService.getUserEvents());
+    }
+
     @GetMapping("/tasks")
     public ResponseEntity<List<TaskResponse>> getTasks() {
         return ResponseEntity
