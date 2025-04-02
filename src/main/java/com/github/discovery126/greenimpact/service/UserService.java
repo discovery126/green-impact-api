@@ -3,6 +3,7 @@ package com.github.discovery126.greenimpact.service;
 import com.github.discovery126.greenimpact.dto.RegisterDto;
 import com.github.discovery126.greenimpact.dto.request.UserRequest;
 import com.github.discovery126.greenimpact.dto.request.UserUpdateRequest;
+import com.github.discovery126.greenimpact.dto.response.RatingResponse;
 import com.github.discovery126.greenimpact.dto.response.TaskResponse;
 import com.github.discovery126.greenimpact.dto.response.UserResponse;
 import com.github.discovery126.greenimpact.exception.UserNotFoundException;
@@ -22,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -165,5 +167,19 @@ public class UserService {
         if (userOptional.isEmpty())
             throw new UserNotFoundException("Пользователя не существует");
         return userMapper.toResponse(userOptional.get());
+    }
+
+    public List<RatingResponse> getRatingMonth() {
+        return userRepository.findRatingByStartDateAndEndDate(
+                LocalDate.now().minusMonths(1),
+                LocalDate.now()
+        );
+    }
+
+    public List<RatingResponse> getRatingWeek() {
+        return userRepository.findRatingByStartDateAndEndDate(
+                LocalDate.now().minusWeeks(1),
+                LocalDate.now()
+        );
     }
 }
