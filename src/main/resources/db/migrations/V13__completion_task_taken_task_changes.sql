@@ -2,9 +2,6 @@ ALTER TABLE public.taken_tasks
     ALTER COLUMN taken_at TYPE DATE;
 
 ALTER TABLE public.taken_tasks
-    DROP CONSTRAINT user_task_unique;
-
-ALTER TABLE public.taken_tasks
     ADD CONSTRAINT taken_tasks_daily_unique UNIQUE (user_id, taken_at, task_id);
 
 

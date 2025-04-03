@@ -1,6 +1,6 @@
 package com.github.discovery126.greenimpact.service;
 
-import com.github.discovery126.greenimpact.dto.RegisterDto;
+import com.github.discovery126.greenimpact.dto.request.RegisterRequest;
 import com.github.discovery126.greenimpact.dto.request.UserRequest;
 import com.github.discovery126.greenimpact.dto.request.UserUpdateRequest;
 import com.github.discovery126.greenimpact.dto.response.RatingResponse;
@@ -48,23 +48,23 @@ public class UserService {
 
     private final UserMapper userMapper;
 
-    public void register(RegisterDto registerDto) {
+    public void register(RegisterRequest registerRequest) {
 
         final String roleByDefault = "USER";
         final String cityDefault = "Таганрог";
         final City city = cityService.getCity(cityDefault);
         final Role role = roleService.getRole(roleByDefault);
 
-        checkDisplayNameExistence(registerDto.getDisplayName());
+        checkDisplayNameExistence(registerRequest.getDisplayName());
 
-        checkEmailExistence(registerDto.getEmail());
+        checkEmailExistence(registerRequest.getEmail());
 
         Set<Role> userRoles = Set.of(role);
 
         User user = User.builder()
-                .displayName(registerDto.getDisplayName())
-                .email(registerDto.getEmail())
-                .passwordHash(passwordEncoder.encode(registerDto.getPassword()))
+                .displayName(registerRequest.getDisplayName())
+                .email(registerRequest.getEmail())
+                .passwordHash(passwordEncoder.encode(registerRequest.getPassword()))
                 .roles(userRoles)
                 .city(city)
                 .build();

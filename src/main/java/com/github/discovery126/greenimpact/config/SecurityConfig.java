@@ -11,15 +11,13 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
@@ -34,7 +32,7 @@ public class SecurityConfig {
     private final UserRepository userRepository;
 
     @Bean
-    public UserDetailsService userDetailsService() {
+    public UserDetailsService customUserDetailsService() {
         return new CustomDetailsService(userRepository);
     }
 
@@ -46,7 +44,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService());
+        provider.setUserDetailsService(customUserDetailsService());
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
@@ -58,10 +56,10 @@ public class SecurityConfig {
                .cors(corsConfigurer -> corsConfigurer
                        .configurationSource(request -> {
                            CorsConfiguration config = new CorsConfiguration();
-                           config.setAllowedOrigins(List.of("http://localhost:5173/")); // Разрешенный фронтенд
+                           config.setAllowedOrigins(List.of("http://localhost:5173"));
                            config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                           config.setAllowedHeaders(List.of("*"));
-                           config.setAllowCredentials(true);
+                           config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+                           config.setExposedHeaders(List.of("Authorization","X-User-Roles"));
                            return config;
                        }))
                .csrf(AbstractHttpConfigurer::disable)
@@ -72,8 +70,9 @@ public class SecurityConfig {
                                        "/v1/rewards",
                                        "/error").permitAll()
                                .anyRequest().authenticated())
-               .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
-               .httpBasic(withDefaults());
+               .httpBasic(withDefaults())
+               .formLogin(withDefaults())
+               .logout(LogoutConfigurer::permitAll);
 
        http.addFilterAfter(roleHeaderFilter,
                org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.class);
