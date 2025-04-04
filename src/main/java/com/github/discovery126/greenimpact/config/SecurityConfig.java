@@ -71,8 +71,7 @@ public class SecurityConfig {
                                        "/error").permitAll()
                                .anyRequest().authenticated())
                .httpBasic(withDefaults())
-               .formLogin(withDefaults())
-               .logout(LogoutConfigurer::permitAll);
+               .formLogin(AbstractHttpConfigurer::disable);
 
        http.addFilterAfter(roleHeaderFilter,
                org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.class);

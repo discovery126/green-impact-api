@@ -23,7 +23,6 @@ public class OpenCageService {
         if (openCageAPIkey.isEmpty())
             throw new NotFoundOpenCageApiException("OpenCageAPI ключ отсутствует");
     }
-
     public Geometry getGeometryCity(String nameCity) {
         JOpenCageForwardRequest  request = new JOpenCageForwardRequest(nameCity);
         request.setRestrictToCountryCode("ru");
