@@ -8,6 +8,10 @@ logging:
     org:
       hibernate.orm.connections.pooling: warn
 
+jwt:
+  secret_key: "${JWT_SECRET}"
+  access_token_expiration: "${JWT_LIFETIME_ACCESS}" # 10 hours
+
 spring:
   servlet:
     multipart:
