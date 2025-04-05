@@ -58,9 +58,10 @@ public class UserController {
     }
 
     @GetMapping("/tasks")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<TaskResponse>> getTasks() {
         return ResponseEntity
-                .ok(userService.getTasksForCurrentUserOrAll());
+                .ok(userService.getUserTasks());
     }
 
     @PreAuthorize("hasAuthority('USER')")

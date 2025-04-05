@@ -5,6 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.Collections;
 import java.util.List;
 
 @ControllerAdvice
@@ -24,7 +26,6 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             UserAlreadyRegisteredEventException.class,
             UserAlreadyConfirmException.class})
     protected ResponseEntity<ErrorDto> handleExistsException(RuntimeException ex) {
-
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new ErrorDto(List.of(ex.getMessage())));
     }
@@ -77,6 +78,11 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.badRequest()
                 .body(new ErrorDto(errors));
 
+    }
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorDto(Collections.singletonList("Неправильный email или пароль")));
     }
 
 }

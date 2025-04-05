@@ -75,7 +75,7 @@ public class SecurityConfig {
                .csrf(AbstractHttpConfigurer::disable)
                .authorizeHttpRequests((auth) ->
                        auth.requestMatchers("/v1/register",
-                                       "/v1/user/tasks",
+                                       "/v1/tasks",
                                        "/v1/events",
                                        "/v1/rewards",
                                        "/v1/login",

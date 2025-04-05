@@ -145,21 +145,17 @@ public class UserService {
     private void checkEmailExistence(String email) {
         Optional<User> existedUser = userRepository.findByEmail(email);
         if (existedUser.isPresent())
-            throw new UsernameAlreadyExistsException("Email is already registered");
+            throw new UsernameAlreadyExistsException("Пользователь с такой email уже зарегистрирован");
     }
 
     private void checkDisplayNameExistence(String displayName) {
         Optional<User> existedUser = userRepository.findByDisplayName(displayName);
         if (existedUser.isPresent())
-            throw new UsernameAlreadyExistsException("Username is already taken");
+            throw new UsernameAlreadyExistsException("Отображаемое имя уже используется");
     }
 
-    public List<TaskResponse> getTasksForCurrentUserOrAll() {
-        if (!securitySessionContext.isUserLoggedIn()) {
-            return taskService.getAllTasks();
-        } else {
+    public List<TaskResponse> getUserTasks() {
             return taskService.getTasksForCurrentUser(securitySessionContext.getId());
-        }
     }
 
     public UserResponse getUser() {
