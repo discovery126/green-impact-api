@@ -22,7 +22,7 @@ public class TaskController {
     @GetMapping
     public ResponseEntity<List<TaskResponse>> getTasks() {
             return ResponseEntity
-                    .ok(taskService.getAllTasks());
+                    .ok(taskService.getAllTasksForUsers());
     }
 
     @GetMapping("/categories")

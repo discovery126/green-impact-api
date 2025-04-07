@@ -1,5 +1,6 @@
 package com.github.discovery126.greenimpact.model;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,11 +15,23 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tasks_completion")
-public class TaskCompletion {
+@Table(name = "tasks_users_status")
+public class TaskUser {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private long id;
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "task_id", referencedColumnName = "id", nullable = false)
+    private Task task;
+
+    @Column(name="taken_at")
+    @Builder.Default
+    private LocalDateTime takenAt = LocalDateTime.now();
 
     @Column(nullable = false)
     private String description;
@@ -28,24 +41,15 @@ public class TaskCompletion {
     private TaskCompletionStatus status;
 
     @Column(name = "completed_at")
-    @Builder.Default
-    private LocalDateTime completedAt = LocalDateTime.now();
+    private LocalDateTime completedAt;
 
     @Column(name = "verified_at")
     private LocalDateTime verifiedAt;
 
     @ManyToOne
-    @JoinColumn(name = "task_id")
-    private Task task;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @ManyToOne
     @JoinColumn(name = "verified_by")
     private User admin;
 
-    @OneToMany(mappedBy = "taskCompletion", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "taskUser", cascade = CascadeType.ALL)
     private List<TaskProof> taskProofs;
 }

@@ -13,12 +13,15 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskCompletionResponse {
+public class TaskUserResponse {
     private long id;
 
     private String description;
 
     private String status;
+
+    @JsonProperty("taken_at")
+    private LocalDateTime takenAt;
 
     @JsonProperty("completed_at")
     private LocalDateTime completedAt;

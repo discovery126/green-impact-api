@@ -23,13 +23,12 @@ public class UserController {
 
     private final UserService userService;
     private final TaskService taskService;
-    private final TakenTaskService takenTaskService;
+    private final TaskUserService taskUserService;
     private final S3Service s3Service;
     private final RewardService rewardService;
     private final EventService eventService;
     private final UserEventService userEventService;
     private final UserRewardService userRewardService;
-    private final TaskCompletionService taskCompletionService;
 
 
     @PreAuthorize("hasAuthority('USER')")
@@ -52,9 +51,9 @@ public class UserController {
     }
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/completed-tasks")
-    public ResponseEntity<List<TaskCompletionResponse>> getCompletedTasks() {
+    public ResponseEntity<List<TaskUserResponse>> getCompletedTasks() {
         return ResponseEntity
-                .ok(taskCompletionService.getUserTaskCompletion());
+                .ok(taskUserService.getUserCompletionsTasks());
     }
 
     @GetMapping("/tasks")
@@ -70,10 +69,11 @@ public class UserController {
         return ResponseEntity
                 .ok(taskService.getActiveTasks());
     }
+
     @PreAuthorize("hasAuthority('USER')")
     @PostMapping("/tasks/{taskId}/take")
     public ResponseEntity<Void> takeTask(@PathVariable Long taskId) {
-        takenTaskService.takeTask(taskId);
+        taskUserService.takeTask(taskId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .build();

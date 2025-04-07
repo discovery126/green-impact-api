@@ -9,23 +9,32 @@ import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query(value = """
-SELECT t.*
+SELECT DISTINCT ON (t.id) t.*,tus_any,tus_today
 FROM tasks t
-        LEFT JOIN taken_tasks tt ON t.id = tt.task_id AND tt.user_id = :user_id
-LEFT JOIN tasks_completion tc ON t.id = tc.task_id
-WHERE (t.type = 'DAILY' AND taken_at <> CURRENT_DATE OR tt.id is NULL
-   OR (t.type='LIMITED' AND NOW() BETWEEN t.start_date AND t.end_date AND tt.id is NULL)
-          AND tc.id is NULL);""",nativeQuery = true)
-    List<Task> findAllTaskForUser(@Param("user_id") Long userId);
+         LEFT JOIN tasks_users_status tus_today
+                   ON t.id = tus_today.task_id
+                       AND tus_today.user_id = :userId
+                       AND tus_today.taken_at::DATE = CURRENT_DATE
+         LEFT JOIN tasks_users_status tus_any
+                   ON t.id = tus_any.task_id
+                       AND tus_any.user_id = :userId
+WHERE tus_today.task_id IS NULL AND t.type='DAILY' 
+   OR tus_any.task_id IS NULL AND t.type='LIMITED' AND t.start_date < now() AND t.end_date > now()
+""",nativeQuery = true)
+    List<Task> findAllAvailableTasksForUser(@Param("userId") Long userId);
 
     @Query(value = """
 SELECT t.*
 FROM tasks t
-         JOIN taken_tasks tt ON t.id = tt.task_id AND tt.user_id = :user_id
-         LEFT JOIN tasks_completion tc ON t.id = tc.task_id
-WHERE (t.type = 'DAILY' AND taken_at = CURRENT_DATE
-    OR (t.type='LIMITED' AND NOW() BETWEEN t.start_date AND t.end_date)
-           AND tc.id is NULL);""",nativeQuery = true)
-    List<Task> findAllActiveTaskForUser(@Param("user_id") Long userId);
+JOIN tasks_users_status tus ON t.id = tus.task_id
+WHERE tus.completed_at IS NULL  AND tus.user_id=:userId AND (
+    tus.taken_at::DATE = CURRENT_DATE AND t.type='DAILY'
+        OR t.type='LIMITED' AND t.start_date < now () and t.end_date > now());""",nativeQuery = true)
+    List<Task> findAllUncompletedActiveTasksByUser(@Param("userId") Long userId);
 
+    @Query(value = """
+SELECT t.*
+FROM tasks t
+WHERE t.type='DAILY' OR t.type='LIMITED' AND t.start_date < now () and t.end_date > now();""",nativeQuery = true)
+    List<Task> findAllTasks();
 }

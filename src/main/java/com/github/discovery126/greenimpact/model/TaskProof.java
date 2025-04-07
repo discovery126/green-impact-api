@@ -22,5 +22,5 @@ public class TaskProof {
 
     @ManyToOne
     @JoinColumn(name = "task_completion_id", nullable = false)
-    private TaskCompletion taskCompletion;
+    private TaskUser taskUser;
 }

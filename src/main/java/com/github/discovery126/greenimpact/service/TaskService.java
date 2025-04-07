@@ -32,6 +32,12 @@ public class TaskService {
                 .map(taskMapper::toResponse)
                 .toList();
     }
+    public List<TaskResponse> getAllTasksForUsers() {
+        return taskRepository.findAllTasks()
+                .stream()
+                .map(taskMapper::toResponse)
+                .toList();
+    }
 
     public TaskResponse createTask(TaskRequest taskRequest) {
         TaskCategory taskCategory = taskCategoryService.getTaskCategory(taskRequest.getCategoryId());
@@ -78,14 +84,13 @@ public class TaskService {
     }
 
     public List<TaskResponse> getTasksForCurrentUser(Long userId) {
-        return taskRepository.findAllTaskForUser(userId)
+        return taskRepository.findAllAvailableTasksForUser(userId)
                 .stream()
                 .map(taskMapper::toResponse)
                 .toList();
     }
-
     public List<TaskResponse> getActiveTasks() {
-        return taskRepository.findAllActiveTaskForUser(securitySessionContext.getId())
+        return taskRepository.findAllUncompletedActiveTasksByUser(securitySessionContext.getId())
                 .stream()
                 .map(taskMapper::toResponse)
                 .toList();

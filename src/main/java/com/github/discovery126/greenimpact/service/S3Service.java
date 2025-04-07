@@ -4,6 +4,7 @@ import com.github.discovery126.greenimpact.config.S3Config;
 import com.github.discovery126.greenimpact.dto.request.CompleteTaskRequest;
 import com.github.discovery126.greenimpact.exception.PhotoNotFoundException;
 import com.github.discovery126.greenimpact.exception.TaskNotFoundException;
+import com.github.discovery126.greenimpact.model.TaskUser;
 import com.github.discovery126.greenimpact.repository.TaskRepository;
 import com.github.discovery126.greenimpact.security.SecuritySessionContext;
 import org.springframework.stereotype.Service;
@@ -25,20 +26,20 @@ public class S3Service {
     private final S3Client s3Client;
     private final String bucketName;
     private final TaskRepository taskRepository;
-    private final TaskCompletionService taskCompletionService;
+    private final TaskUserService taskUserService;
     private final SecuritySessionContext securitySessionContext;
 
     public S3Service(S3Client s3Client,
                      S3Config s3Config,
                      SecuritySessionContext securitySessionContext,
                      TaskRepository taskRepository,
-                     TaskCompletionService taskCompletionService
+                     TaskUserService taskUserService
     ) {
         this.s3Client = s3Client;
         this.bucketName = s3Config.getBucketName();
         this.securitySessionContext = securitySessionContext;
         this.taskRepository = taskRepository;
-        this.taskCompletionService = taskCompletionService;
+        this.taskUserService = taskUserService;
     }
 
     public void uploadFile(List<MultipartFile> photos, Long taskId,
@@ -72,7 +73,7 @@ public class S3Service {
             fileUrls.add(myVkCloudUrl + photoFileUrl);
             index += 1;
         }
-        taskCompletionService.saveCompletion(completeTaskRequest,
+        taskUserService.saveCompletion(completeTaskRequest,
                 taskId,
                 fileUrls);
 

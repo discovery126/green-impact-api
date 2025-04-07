@@ -1,12 +1,11 @@
 package com.github.discovery126.greenimpact.controller;
 
 import com.github.discovery126.greenimpact.dto.request.TaskRequest;
-import com.github.discovery126.greenimpact.dto.response.TaskCompletionResponse;
 import com.github.discovery126.greenimpact.dto.response.TaskResponse;
+import com.github.discovery126.greenimpact.dto.response.TaskUserResponse;
 import com.github.discovery126.greenimpact.model.TaskCompletionStatus;
-import com.github.discovery126.greenimpact.service.TaskCompletionService;
 import com.github.discovery126.greenimpact.service.TaskService;
-import com.github.discovery126.greenimpact.utils.ValidEnum;
+import com.github.discovery126.greenimpact.service.TaskUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +22,7 @@ import java.util.List;
 public class AdminTaskController {
 
     private final TaskService taskService;
-    private final TaskCompletionService taskCompletionService;
+    private final TaskUserService taskUserService;
 
     @GetMapping
     public ResponseEntity<List<TaskResponse>> getAllTasks() {
@@ -51,15 +50,15 @@ public class AdminTaskController {
                 .build();
     }
     @GetMapping("/completed-tasks")
-    public ResponseEntity<List<TaskCompletionResponse>> getCompletedTasks() {
+    public ResponseEntity<List<TaskUserResponse>> getCompletedTasks() {
         return ResponseEntity
-                .ok(taskCompletionService.getAllTaskCompletion());
+                .ok(taskUserService.getAllTaskCompletion());
     }
 
     @PostMapping("/completed-tasks/{id}/answer")
-    public ResponseEntity<TaskCompletionResponse> answerCompletionTask(@PathVariable Long id,
+    public ResponseEntity<TaskUserResponse> answerCompletionTask(@PathVariable Long id,
                                                                        @RequestParam("status") TaskCompletionStatus status) {
         return ResponseEntity
-                .ok(taskCompletionService.answerCompletionTask(id,status));
+                .ok(taskUserService.answerCompletionTask(id,status));
     }
 }
