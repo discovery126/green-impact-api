@@ -69,17 +69,18 @@ public class SecurityConfig {
                            config.setAllowedOrigins(List.of("http://localhost:5173"));
                            config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                            config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-                           config.setExposedHeaders(List.of("Authorization","X-User-Roles"));
+                           config.setExposedHeaders(List.of("Authorization"));
                            return config;
                        }))
                .csrf(AbstractHttpConfigurer::disable)
                .authorizeHttpRequests((auth) ->
                        auth.requestMatchers("/v1/register",
-                                       "/v1/tasks",
-                                       "/v1/events",
-                                       "/v1/rewards",
+                                       "/v1/tasks/**",
+                                       "/v1/events/**",
+                                       "/v1/rewards/**",
                                        "/v1/login",
                                        "/error").permitAll()
+                               .requestMatchers("/swagger-ui/**", "/v3/api-docs/**") .permitAll()
                                .anyRequest().authenticated())
                .sessionManagement(session ->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                .exceptionHandling(e -> {
