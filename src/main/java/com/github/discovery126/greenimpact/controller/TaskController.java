@@ -1,6 +1,8 @@
 package com.github.discovery126.greenimpact.controller;
 
+import com.github.discovery126.greenimpact.dto.response.TaskCategoryResponse;
 import com.github.discovery126.greenimpact.dto.response.TaskResponse;
+import com.github.discovery126.greenimpact.service.TaskCategoryService;
 import com.github.discovery126.greenimpact.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +17,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TaskController {
     private final TaskService taskService;
+    private final TaskCategoryService taskCategoryService;
 
     @GetMapping
     public ResponseEntity<List<TaskResponse>> getTasks() {
             return ResponseEntity
                     .ok(taskService.getAllTasks());
+    }
+
+    @GetMapping("/categories")
+    public ResponseEntity<List<TaskCategoryResponse>> getAllTasks() {
+        return ResponseEntity
+                .ok(taskCategoryService.getAllCategories());
     }
 }

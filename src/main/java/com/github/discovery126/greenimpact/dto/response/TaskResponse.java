@@ -33,6 +33,6 @@ public class TaskResponse {
 
     private Integer points;
 
-    @JsonProperty("category_id")
-    private TaskCategory taskCategory;
+    @JsonProperty("category")
+    private TaskCategoryResponse taskCategory;
 }

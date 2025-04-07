@@ -1,6 +1,7 @@
 package com.github.discovery126.greenimpact.security;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -43,6 +44,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Неправильная JWT подпись");
                 return;
             }
+            catch (MalformedJwtException e) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Jwt токен неправильный ");
+                return;
+            }
+
         }
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 

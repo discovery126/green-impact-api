@@ -18,5 +18,5 @@ public class TaskCategory {
     private int id;
 
     @Column(name = "name_category")
-    private String nameCategory;
+    private String categoryName;
 }
