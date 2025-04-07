@@ -48,8 +48,7 @@ public class TaskService {
                 .points(taskRequest.getPoints())
                 .taskType(taskType)
                 .taskCategory(taskCategory)
-                .startDate(taskRequest.getStartDate())
-                .endDate(taskRequest.getEndDate())
+                .expiredDate(taskRequest.getExpiredDate())
                 .build();
         return taskMapper.toResponse(taskRepository.save(task));
     }
@@ -67,8 +66,7 @@ public class TaskService {
         updateFieldIfChanged(task.getTitle(),taskRequest.getTitle(), task::setTitle);
         updateFieldIfChanged(task.getDescription(),taskRequest.getDescription(), task::setDescription);
         updateFieldIfChanged(task.getPoints(),taskRequest.getPoints(), task::setPoints);
-        updateFieldIfChanged(task.getStartDate(),taskRequest.getStartDate(), task::setStartDate);
-        updateFieldIfChanged(task.getEndDate(),taskRequest.getEndDate(), task::setEndDate);
+        updateFieldIfChanged(task.getExpiredDate(),taskRequest.getExpiredDate(), task::setExpiredDate);
         updateFieldIfChanged(task.getTaskCategory(),taskCategory, task::setTaskCategory);
         updateFieldIfChanged(task.getTaskType(),taskType, task::setTaskType);
 

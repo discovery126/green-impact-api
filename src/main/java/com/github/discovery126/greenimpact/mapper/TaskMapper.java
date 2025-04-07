@@ -19,8 +19,7 @@ public class TaskMapper {
                         .categoryName(task.getTaskCategory().getCategoryName())
                         .build())
                 .taskType(task.getTaskType())
-                .startDate(task.getStartDate())
-                .endDate(task.getEndDate())
+                .expiredDate(task.getExpiredDate())
                 .build();
     }
 }

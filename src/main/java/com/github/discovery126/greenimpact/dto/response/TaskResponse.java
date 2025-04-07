@@ -25,11 +25,8 @@ public class TaskResponse {
     @JsonProperty("task_type")
     private TaskType taskType;
 
-    @JsonProperty("start_date")
-    private LocalDateTime startDate;
-
-    @JsonProperty("end_date")
-    private LocalDateTime endDate;
+    @JsonProperty("expired_date")
+    private LocalDateTime expiredDate;
 
     private Integer points;
 

@@ -19,7 +19,7 @@ FROM tasks t
                    ON t.id = tus_any.task_id
                        AND tus_any.user_id = :userId
 WHERE tus_today.task_id IS NULL AND t.type='DAILY' 
-   OR tus_any.task_id IS NULL AND t.type='LIMITED' AND t.start_date < now() AND t.end_date > now()
+   OR tus_any.task_id IS NULL AND t.type='LIMITED' AND t.expired_date > now()
 """,nativeQuery = true)
     List<Task> findAllAvailableTasksForUser(@Param("userId") Long userId);
 
@@ -29,12 +29,12 @@ FROM tasks t
 JOIN tasks_users_status tus ON t.id = tus.task_id
 WHERE tus.completed_at IS NULL  AND tus.user_id=:userId AND (
     tus.taken_at::DATE = CURRENT_DATE AND t.type='DAILY'
-        OR t.type='LIMITED' AND t.start_date < now () and t.end_date > now());""",nativeQuery = true)
+        OR t.type='LIMITED'  AND t.expired_date > now());""",nativeQuery = true)
     List<Task> findAllUncompletedActiveTasksByUser(@Param("userId") Long userId);
 
     @Query(value = """
 SELECT t.*
 FROM tasks t
-WHERE t.type='DAILY' OR t.type='LIMITED' AND t.start_date < now () and t.end_date > now();""",nativeQuery = true)
+WHERE t.type='DAILY' OR t.type='LIMITED' AND t.expired_date > now();""",nativeQuery = true)
     List<Task> findAllTasks();
 }

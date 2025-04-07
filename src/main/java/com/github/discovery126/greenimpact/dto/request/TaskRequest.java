@@ -27,13 +27,9 @@ public class TaskRequest {
     @JsonProperty("task_type")
     private String taskType;
 
-    @FutureOrPresent(message = "Дата начала должна быть в настоящем или будущем времени")
-    @JsonProperty("start_date")
-    private LocalDateTime startDate;
-
     @Future(message = "Дата окончания должна быть в будущем")
-    @JsonProperty("end_date")
-    private LocalDateTime endDate;
+    @JsonProperty("expired_date")
+    private LocalDateTime expiredDate;
 
     @NotNull(message = "Количество очков не может быть пустым")
     @Positive(message = "Очки должны быть не меньше 1")

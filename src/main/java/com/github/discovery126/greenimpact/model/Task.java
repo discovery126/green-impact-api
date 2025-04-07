@@ -30,11 +30,8 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private TaskType taskType;
 
-    @Column(name = "start_date")
-    private LocalDateTime startDate;
-
-    @Column(name = "end_date")
-    private LocalDateTime endDate;
+    @Column(name = "expired_date")
+    private LocalDateTime expiredDate;
 
     @Column(nullable = false)
     private Integer points;
