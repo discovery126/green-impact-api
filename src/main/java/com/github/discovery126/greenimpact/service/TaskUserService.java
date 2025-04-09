@@ -10,6 +10,10 @@ import com.github.discovery126.greenimpact.repository.TaskUserRepository;
 import com.github.discovery126.greenimpact.repository.UserRepository;
 import com.github.discovery126.greenimpact.security.SecuritySessionContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -103,11 +107,19 @@ public class TaskUserService {
                 .toList();
     }
 
-    public List<TaskUserResponse> getAllTaskCompletion() {
-        return taskUserRepository.findAllCompletionTasks()
-                .stream()
-                .map(taskUserMapper::toResponse)
-                .toList();
+    public Page<TaskUserResponse> getAllTaskCompletion(int page,int size, String sort) {
+
+        Sort sortOrder = Sort.by(sort.split(",")[0]);
+        if (sort.split(",")[1].equalsIgnoreCase("desc")) {
+            sortOrder = sortOrder.descending();
+        } else {
+            sortOrder = sortOrder.ascending();
+        }
+
+        Pageable pageable = PageRequest.of(page, size, sortOrder);
+
+        return taskUserRepository.findAllCompletionTasks(pageable)
+                .map(taskUserMapper::toResponse);
     }
 
     public TaskUserResponse answerCompletionTask(Long taskCompletionId, TaskCompletionStatus status) {

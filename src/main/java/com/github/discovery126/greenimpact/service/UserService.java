@@ -71,7 +71,7 @@ public class UserService {
         userRepository.save(user);
     }
     @Transactional(readOnly = true)
-    public Page<User> getAllUsers(int page, int size, String sort) {
+    public Page<UserResponse> getAllUsers(int page, int size, String sort) {
 
         Sort sortOrder = Sort.by(sort.split(",")[0]);
         if (sort.split(",")[1].equalsIgnoreCase("desc")) {
@@ -82,7 +82,8 @@ public class UserService {
 
         Pageable pageable = PageRequest.of(page, size, sortOrder);
 
-        return userRepository.findAll(pageable);
+        return userRepository.findAll(pageable)
+                .map(userMapper::toResponse);
     }
 
     public UserResponse createUser(UserRequest userRequest) {

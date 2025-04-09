@@ -1,11 +1,9 @@
 package com.github.discovery126.greenimpact.controller;
 
-import com.github.discovery126.greenimpact.dto.response.BaseSuccessResponse;
 import com.github.discovery126.greenimpact.dto.request.UserRequest;
 import com.github.discovery126.greenimpact.dto.request.UserUpdateRequest;
+import com.github.discovery126.greenimpact.dto.response.BaseSuccessResponse;
 import com.github.discovery126.greenimpact.dto.response.UserResponse;
-import com.github.discovery126.greenimpact.mapper.UserMapper;
-import com.github.discovery126.greenimpact.model.User;
 import com.github.discovery126.greenimpact.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 public class AdminUserController {
 
     private final UserService userService;
-    private final UserMapper userMapper;
 
     @GetMapping
     public ResponseEntity<BaseSuccessResponse<Page<UserResponse>>> getAllUsers(
@@ -30,11 +27,10 @@ public class AdminUserController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id,asc") String sort
     ) {
-        Page<User> userDtoPage = userService.getAllUsers(page,size,sort);
         return ResponseEntity
                 .ok(BaseSuccessResponse.<Page<UserResponse>>builder()
                         .code(HttpStatus.OK.value())
-                        .data(userDtoPage.map(userMapper::toResponse))
+                        .data(userService.getAllUsers(page,size,sort))
                         .build()
                 );
     }

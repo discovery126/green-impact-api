@@ -1,6 +1,8 @@
 package com.github.discovery126.greenimpact.repository;
 
 import com.github.discovery126.greenimpact.model.TaskUser;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -55,10 +57,15 @@ public interface TaskUserRepository extends JpaRepository<TaskUser, Long> {
     List<TaskUser> findAllCompletedByUserId(Long userId);
 
     @Query(value = """
-            SELECT tuc.*
-            FROM tasks_users_status tuc
-            WHERE tuc.completed_at IS NOT NULL;""",nativeQuery = true)
-    List<TaskUser> findAllCompletionTasks();
+        SELECT tuc.*
+        FROM tasks_users_status tuc
+        WHERE tuc.completed_at IS NOT NULL
+        """, countQuery = """
+        SELECT COUNT(*) 
+        FROM tasks_users_status tuc
+        WHERE tuc.completed_at IS NOT NULL
+        """, nativeQuery = true)
+    Page<TaskUser> findAllCompletionTasks(Pageable pageable);
 
     TaskUser findByUserIdAndTaskId(Long userId, Long taskId);
 }

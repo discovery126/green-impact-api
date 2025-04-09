@@ -1,12 +1,9 @@
 package com.github.discovery126.greenimpact.controller;
 
-import com.github.discovery126.greenimpact.dto.response.BaseSuccessResponse;
 import com.github.discovery126.greenimpact.dto.request.TaskRequest;
+import com.github.discovery126.greenimpact.dto.response.BaseSuccessResponse;
 import com.github.discovery126.greenimpact.dto.response.TaskResponse;
-import com.github.discovery126.greenimpact.dto.response.TaskUserResponse;
-import com.github.discovery126.greenimpact.model.TaskCompletionStatus;
 import com.github.discovery126.greenimpact.service.TaskService;
-import com.github.discovery126.greenimpact.service.TaskUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +20,6 @@ import java.util.List;
 public class AdminTaskController {
 
     private final TaskService taskService;
-    private final TaskUserService taskUserService;
 
     @GetMapping
     public ResponseEntity<BaseSuccessResponse<List<TaskResponse>>> getAllTasks() {
@@ -61,25 +57,5 @@ public class AdminTaskController {
         return ResponseEntity
                 .noContent()
                 .build();
-    }
-    @GetMapping("/completed-tasks")
-    public ResponseEntity<BaseSuccessResponse<List<TaskUserResponse>>> getCompletedTasks() {
-        return ResponseEntity
-                .ok(BaseSuccessResponse.<List<TaskUserResponse>>builder()
-                        .code(HttpStatus.OK.value())
-                        .data(taskUserService.getAllTaskCompletion())
-                        .build()
-                );
-    }
-
-    @PostMapping("/completed-tasks/{id}/answer")
-    public ResponseEntity<BaseSuccessResponse<TaskUserResponse>> answerCompletionTask(@PathVariable Long id,
-                                                                       @RequestParam("status") TaskCompletionStatus status) {
-        return ResponseEntity
-                .ok(BaseSuccessResponse.<TaskUserResponse>builder()
-                        .code(HttpStatus.OK.value())
-                        .data(taskUserService.answerCompletionTask(id,status))
-                        .build()
-                );
     }
 }
