@@ -3,13 +3,11 @@ package com.github.discovery126.greenimpact.service;
 import com.github.discovery126.greenimpact.dto.request.LoginRequest;
 import com.github.discovery126.greenimpact.dto.request.RegisterRequest;
 import com.github.discovery126.greenimpact.dto.response.TokenResponse;
-import com.github.discovery126.greenimpact.repository.UserRepository;
 import com.github.discovery126.greenimpact.security.CustomUserDetails;
 import com.github.discovery126.greenimpact.security.JwtTokenUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,12 +16,8 @@ public class AuthService {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthService(UserRepository userRepository,
-                       CityService cityService,
-                       RoleService roleService,
-                       UserService userService,
+    public AuthService(UserService userService,
                        JwtTokenUtils jwtTokenUtils,
-                       PasswordEncoder passwordEncoder,
                        AuthenticationManager authenticationManager) {
         this.jwtTokenUtils = jwtTokenUtils;
         this.authenticationManager = authenticationManager;
@@ -33,6 +27,7 @@ public class AuthService {
     public void register(RegisterRequest registerRequest) {
        userService.register(registerRequest);
     }
+
     public TokenResponse login(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

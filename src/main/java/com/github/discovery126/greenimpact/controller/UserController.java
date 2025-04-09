@@ -97,9 +97,9 @@ public class UserController {
     // Rewards
 
     @PreAuthorize("hasAuthority('USER')")
-    @PostMapping("rewards/{rewardId}/claim")
-    public ResponseEntity<Void> claimReward(@PathVariable Long rewardId) {
-        rewardService.claimReward(rewardId);
+    @PostMapping("rewards/{rewardId}/exchange")
+    public ResponseEntity<Void> exchangeReward(@PathVariable Long rewardId) {
+        rewardService.exchangeReward(rewardId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .build();

@@ -2,6 +2,7 @@ package com.github.discovery126.greenimpact.service;
 
 import com.github.discovery126.greenimpact.dto.request.RewardRequest;
 import com.github.discovery126.greenimpact.dto.response.RewardResponse;
+import com.github.discovery126.greenimpact.exception.NotEnoughPointsException;
 import com.github.discovery126.greenimpact.exception.RewardNotFoundException;
 import com.github.discovery126.greenimpact.exception.RewardOutOfStockException;
 import com.github.discovery126.greenimpact.exception.UserNotFoundException;
@@ -82,7 +83,7 @@ public class RewardService {
             throw new UserNotFoundException("Награда с id %d не найдена".formatted(rewardId));
         }
     }
-    public void claimReward(Long rewardId) {
+    public void exchangeReward(Long rewardId) {
         Reward reward = rewardRepository.findById(rewardId)
                 .orElseThrow(() -> new UserNotFoundException("Награда с id %d не найдено".formatted(rewardId)));
         User user = userRepository.findById(securitySessionContext.getId())
@@ -91,6 +92,9 @@ public class RewardService {
         if (reward.getAmount().equals(0)) {
             throw new RewardOutOfStockException("Награды данного типа закончились");
         }
+        if (user.getPoints()<reward.getCostPoints()) {
+            throw new NotEnoughPointsException("Не хватает баллов для обмена");
+        }
         String promoCode = promoCodeService.generatePromoCode();
         UserReward userReward = UserReward.builder()
                 .user(user)
@@ -98,6 +102,8 @@ public class RewardService {
                 .promoCode(promoCode)
                 .status(UserRewardStatus.REDEEMED)
                 .build();
+
+        user.setPoints(user.getPoints()-reward.getCostPoints());
         reward.setAmount(reward.getAmount()-1);
 
         rewardRepository.save(reward);
