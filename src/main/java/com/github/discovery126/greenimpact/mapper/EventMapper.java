@@ -22,10 +22,8 @@ public class EventMapper {
                 .endDate(event.getEndDate())
                 .eventPoints(event.getEventPoints())
                 .status(event.getStatus().name())
-                .eventCode(event.getEventCode())
                 .latitude(event.getLatitude())
                 .longitude(event.getLongitude())
-                .createdAt(event.getCreatedAt())
                 .build();
     }
 }

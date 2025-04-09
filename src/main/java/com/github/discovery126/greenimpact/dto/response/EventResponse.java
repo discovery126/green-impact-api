@@ -38,9 +38,6 @@ public class EventResponse {
     @JsonProperty("organiser_phone")
     private String organiserPhone;
 
-    @JsonProperty("event_code")
-    private String eventCode;
-
     private String street;
 
     private Integer houseNumber;
@@ -50,8 +47,6 @@ public class EventResponse {
     private BigDecimal latitude;
 
     private BigDecimal longitude;
-
-    private LocalDateTime createdAt;
 
     @JsonProperty("city")
     private City city;
