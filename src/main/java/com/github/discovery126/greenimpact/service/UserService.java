@@ -6,8 +6,7 @@ import com.github.discovery126.greenimpact.dto.request.UserUpdateRequest;
 import com.github.discovery126.greenimpact.dto.response.RatingResponse;
 import com.github.discovery126.greenimpact.dto.response.TaskResponse;
 import com.github.discovery126.greenimpact.dto.response.UserResponse;
-import com.github.discovery126.greenimpact.exception.UserNotFoundException;
-import com.github.discovery126.greenimpact.exception.UsernameAlreadyExistsException;
+import com.github.discovery126.greenimpact.exception.*;
 import com.github.discovery126.greenimpact.mapper.UserMapper;
 import com.github.discovery126.greenimpact.model.City;
 import com.github.discovery126.greenimpact.model.Role;
@@ -114,7 +113,7 @@ public class UserService {
     public UserResponse updateUser(UserUpdateRequest userUpdateRequest, Long userId) {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isEmpty())
-            throw new UserNotFoundException("User not found");
+            throw new CustomException(ValidationConstants.USER_NOT_FOUND);
 
         City city = cityService.getCity(userUpdateRequest.getCityId());
 
@@ -138,20 +137,20 @@ public class UserService {
         if (userRepository.existsById(userId)) {
             userRepository.deleteById(userId);
         } else {
-            throw new UserNotFoundException("Пользователь с id %d не найден".formatted(userId));
+            throw new CustomException(ValidationConstants.USER_NOT_FOUND);
         }
     }
 
     private void checkEmailExistence(String email) {
         Optional<User> existedUser = userRepository.findByEmail(email);
         if (existedUser.isPresent())
-            throw new UsernameAlreadyExistsException("Пользователь с такой email уже зарегистрирован");
+            throw new CustomException(ValidationConstants.EMAIL_ALREADY_EXIST);
     }
 
     private void checkDisplayNameExistence(String displayName) {
         Optional<User> existedUser = userRepository.findByDisplayName(displayName);
         if (existedUser.isPresent())
-            throw new UsernameAlreadyExistsException("Отображаемое имя уже используется");
+            throw new CustomException(ValidationConstants.DISPLAY_NAME_ALREADY_EXIST);
     }
 
     public List<TaskResponse> getUserTasks() {
@@ -161,7 +160,7 @@ public class UserService {
     public UserResponse getUser() {
         Optional<User> userOptional = userRepository.findById(securitySessionContext.getId());
         if (userOptional.isEmpty())
-            throw new UserNotFoundException("Пользователя не существует");
+            throw new CustomException(ValidationConstants.USER_NOT_FOUND);
         return userMapper.toResponse(userOptional.get());
     }
 

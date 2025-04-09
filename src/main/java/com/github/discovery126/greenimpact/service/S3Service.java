@@ -1,8 +1,8 @@
 package com.github.discovery126.greenimpact.service;
 
 import com.github.discovery126.greenimpact.config.S3Config;
-import com.github.discovery126.greenimpact.exception.PhotoNotFoundException;
-import com.github.discovery126.greenimpact.exception.TaskNotFoundException;
+import com.github.discovery126.greenimpact.exception.CustomException;
+import com.github.discovery126.greenimpact.exception.ValidationConstants;
 import com.github.discovery126.greenimpact.repository.TaskRepository;
 import com.github.discovery126.greenimpact.security.SecuritySessionContext;
 import org.springframework.stereotype.Service;
@@ -43,10 +43,10 @@ public class S3Service {
     public void uploadFile(List<MultipartFile> photos, Long taskId,
                                    String comment) throws IOException {
         if (photos.isEmpty() || (photos.size() == 1 && photos.getFirst().isEmpty())) {
-            throw new PhotoNotFoundException("Файлы не загружены");
+            throw new CustomException(ValidationConstants.PHOTO_NOT_UPLOAD);
         }
         if (!taskRepository.existsById(taskId)) {
-            throw new TaskNotFoundException("Задания с id %d не существует".formatted(taskId));
+            throw new CustomException(ValidationConstants.TASK_ID_NOT_FOUND);
         }
 
         int index = 1;

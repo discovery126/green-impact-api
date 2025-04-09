@@ -1,7 +1,7 @@
 package com.github.discovery126.greenimpact.service;
 
-import com.github.discovery126.greenimpact.exception.NotFoundOpenCageException;
-import com.github.discovery126.greenimpact.exception.NotFoundOpenCageApiException;
+import com.github.discovery126.greenimpact.exception.CustomException;
+import com.github.discovery126.greenimpact.exception.ValidationConstants;
 import com.github.discovery126.greenimpact.model.City;
 import com.github.discovery126.greenimpact.utils.Geometry;
 import com.opencagedata.jopencage.JOpenCageGeocoder;
@@ -21,7 +21,7 @@ public class OpenCageService {
     public OpenCageService(@Value("${open-cage.api-key}") String openCageAPIkey) {
         this.jOpenCageGeocoder = new JOpenCageGeocoder(openCageAPIkey);
         if (openCageAPIkey.isEmpty())
-            throw new NotFoundOpenCageApiException("OpenCageAPI ключ отсутствует");
+            throw new CustomException(ValidationConstants.OPEN_CAGE_API_NOT_FOUND);
     }
     public Geometry getGeometryCity(String nameCity) {
         JOpenCageForwardRequest  request = new JOpenCageForwardRequest(nameCity);
@@ -32,7 +32,7 @@ public class OpenCageService {
         JOpenCageResponse response = jOpenCageGeocoder.forward(request);
 
         if (response == null)
-            throw new NotFoundOpenCageException("Город с указанным названием не найден");
+            throw new CustomException(ValidationConstants.OPEN_CAGE_CITY_NOT_FOUND);
 
         JOpenCageLatLng firstResultLatLng = response.getFirstPosition();
         return Geometry.builder()
@@ -55,7 +55,7 @@ public class OpenCageService {
         JOpenCageResponse response = jOpenCageGeocoder.forward(request);
 
         if (response == null)
-            throw new NotFoundOpenCageException("Улица с указанным адрессом не найден");
+            throw new CustomException(ValidationConstants.OPEN_CAGE_ADDRESS_NOT_FOUND);
 
         JOpenCageLatLng firstResultLatLng = response.getFirstPosition();
         return Geometry.builder()

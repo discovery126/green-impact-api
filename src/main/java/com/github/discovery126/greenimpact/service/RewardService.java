@@ -2,10 +2,8 @@ package com.github.discovery126.greenimpact.service;
 
 import com.github.discovery126.greenimpact.dto.request.RewardRequest;
 import com.github.discovery126.greenimpact.dto.response.RewardResponse;
-import com.github.discovery126.greenimpact.exception.NotEnoughPointsException;
-import com.github.discovery126.greenimpact.exception.RewardNotFoundException;
-import com.github.discovery126.greenimpact.exception.RewardOutOfStockException;
-import com.github.discovery126.greenimpact.exception.UserNotFoundException;
+import com.github.discovery126.greenimpact.exception.CustomException;
+import com.github.discovery126.greenimpact.exception.ValidationConstants;
 import com.github.discovery126.greenimpact.mapper.RewardMapper;
 import com.github.discovery126.greenimpact.model.*;
 import com.github.discovery126.greenimpact.repository.RewardRepository;
@@ -59,7 +57,7 @@ public class RewardService {
     public RewardResponse updateReward(RewardRequest rewardRequest, Long rewardId) {
         Optional<Reward> rewardOptional = rewardRepository.findById(rewardId);
         if (rewardOptional.isEmpty()) {
-            throw new RewardNotFoundException("Награда с id %d не найдена".formatted(rewardId));
+            throw new CustomException(ValidationConstants.REWARD_ID_NOT_FOUND);
         }
         RewardCategory rewardCategory = rewardCategoryService.getRewardCategory(rewardRequest.getCategoryId());
         RewardType rewardType = RewardType.valueOf(rewardRequest.getRewardType().toUpperCase());
@@ -80,20 +78,19 @@ public class RewardService {
         if (rewardRepository.existsById(rewardId)) {
             rewardRepository.deleteById(rewardId);
         } else {
-            throw new UserNotFoundException("Награда с id %d не найдена".formatted(rewardId));
+            throw new CustomException(ValidationConstants.REWARD_ID_NOT_FOUND);
         }
     }
     public void exchangeReward(Long rewardId) {
         Reward reward = rewardRepository.findById(rewardId)
-                .orElseThrow(() -> new UserNotFoundException("Награда с id %d не найдено".formatted(rewardId)));
+                .orElseThrow(() -> new CustomException(ValidationConstants.REWARD_ID_NOT_FOUND));
         User user = userRepository.findById(securitySessionContext.getId())
-                .orElseThrow(() -> new UserNotFoundException("Пользователь с id %d не найден"
-                        .formatted(rewardId)));
+                .orElseThrow(() -> new CustomException(ValidationConstants.USER_NOT_FOUND));
         if (reward.getAmount().equals(0)) {
-            throw new RewardOutOfStockException("Награды данного типа закончились");
+            throw new CustomException(ValidationConstants.REWARD_OUT_OF_STOCK);
         }
         if (user.getPoints()<reward.getCostPoints()) {
-            throw new NotEnoughPointsException("Не хватает баллов для обмена");
+            throw new CustomException(ValidationConstants.REWARD_NOT_ENOUGH_POINTS);
         }
         String promoCode = promoCodeService.generatePromoCode();
         UserReward userReward = UserReward.builder()

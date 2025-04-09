@@ -2,7 +2,8 @@ package com.github.discovery126.greenimpact.service;
 
 import com.github.discovery126.greenimpact.dto.request.CityRequest;
 import com.github.discovery126.greenimpact.dto.response.CityResponse;
-import com.github.discovery126.greenimpact.exception.CityNotFoundException;
+import com.github.discovery126.greenimpact.exception.CustomException;
+import com.github.discovery126.greenimpact.exception.ValidationConstants;
 import com.github.discovery126.greenimpact.mapper.CityMapper;
 import com.github.discovery126.greenimpact.model.City;
 import com.github.discovery126.greenimpact.repository.CityRepository;
@@ -23,7 +24,7 @@ public class CityService {
     public City getCity(String nameCity) {
         Optional<City> city = cityRepository.findByNameCity(nameCity);
         if (city.isEmpty())
-            throw new CityNotFoundException("Город с названием %s не найден".formatted(nameCity));
+            throw new CustomException(ValidationConstants.CITY_NAME_NOT_FOUND);
 
         return city.get();
     }
@@ -31,7 +32,7 @@ public class CityService {
     public City getCity(Integer id) {
         Optional<City> city = cityRepository.findById(id);
         if (city.isEmpty())
-            throw new CityNotFoundException("Город с id %d не найден".formatted(id));
+            throw new CustomException(ValidationConstants.CITY_ID_NOT_FOUND);
 
         return city.get();
     }
@@ -58,7 +59,7 @@ public class CityService {
         if (cityRepository.existsById(cityId)) {
             cityRepository.deleteById(cityId);
         } else {
-            throw new CityNotFoundException("Город с id %d не найден".formatted(cityId));
+            throw new CustomException(ValidationConstants.CITY_ID_NOT_FOUND);
         }
     }
 }

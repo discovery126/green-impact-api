@@ -3,7 +3,8 @@ package com.github.discovery126.greenimpact.service;
 import com.github.discovery126.greenimpact.dto.request.EventRequest;
 import com.github.discovery126.greenimpact.dto.response.EventResponse;
 import com.github.discovery126.greenimpact.dto.response.UserEventResponse;
-import com.github.discovery126.greenimpact.exception.*;
+import com.github.discovery126.greenimpact.exception.CustomException;
+import com.github.discovery126.greenimpact.exception.ValidationConstants;
 import com.github.discovery126.greenimpact.mapper.EventMapper;
 import com.github.discovery126.greenimpact.mapper.UserMapper;
 import com.github.discovery126.greenimpact.model.*;
@@ -73,7 +74,7 @@ public class EventService {
     public EventResponse updateEvent(EventRequest eventRequest, long id) {
         Optional<Event> eventOptional = eventRepository.findById(id);
         if (eventOptional.isEmpty())
-            throw new EventNotFoundException("Event not found");
+            throw new CustomException(ValidationConstants.EVENT_ID_NOT_FOUND);
 
         City city = cityService.getCity(eventRequest.getCityId());
 
@@ -117,7 +118,7 @@ public class EventService {
         if (eventRepository.existsById(eventId)) {
             eventRepository.deleteById(eventId);
         } else {
-            throw new EventNotFoundException("Мероприятие с id %d не найдено".formatted(eventId));
+            throw new CustomException(ValidationConstants.EVENT_ID_NOT_FOUND);
         }
     }
 
@@ -131,13 +132,11 @@ public class EventService {
 
     public void registerEvent(Long eventId) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EventNotFoundException("Мероприятие с id %d не найдено".formatted(eventId)));
+                .orElseThrow(() -> new CustomException(ValidationConstants.EVENT_ID_NOT_FOUND));
         User user = userRepository.findById(securitySessionContext.getId())
-                .orElseThrow(() -> new UserNotFoundException("Пользователь с id %d не найден"
-                        .formatted(eventId)));
+                .orElseThrow(() -> new CustomException(ValidationConstants.USER_NOT_FOUND));
         if (userEventRepository.existsByUserIdAndEventId(securitySessionContext.getId(),eventId)) {
-            throw new UserAlreadyRegisteredEventException("Пользователь %d уже зарегистрирован"
-                    .formatted(securitySessionContext.getId()));
+            throw new CustomException(ValidationConstants.EVENT_USER_ALREADY_REGISTERED);
         }
         UserEvent userEvent = UserEvent.builder()
                 .user(user)
@@ -148,17 +147,16 @@ public class EventService {
     }
     public UserEventResponse confirmEvent(Long eventId, String eventCode) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EventNotFoundException("Мероприятие с id %d не найдено".formatted(eventId)));
+                .orElseThrow(() -> new CustomException(ValidationConstants.EVENT_ID_NOT_FOUND));
         if (!event.getEventCode().equals(eventCode)) {
-            throw new BadEventCodeException("Код неправильный");
+            throw new CustomException(ValidationConstants.EVENT_BAD_CODE);
         }
         UserEvent userEvent = userEventRepository.findByUserIdAndEventId(securitySessionContext.getId(),eventId);
         if (userEvent.getConfirmedAt() != null) {
-            throw new UserAlreadyConfirmException("Вы уже подтвердили участие в мероприятие");
+            throw new CustomException(ValidationConstants.EVENT_USER_ALREADY_CONFIRM);
         }
         User user = userRepository.findById(securitySessionContext.getId())
-                .orElseThrow(() -> new UserNotFoundException("Пользователь с id %d не найден"
-                        .formatted(eventId)));
+                .orElseThrow(() -> new CustomException(ValidationConstants.USER_NOT_FOUND));
 
         userEvent.setConfirmedAt(LocalDateTime.now());
         user.setPoints(user.getPoints() + event.getEventPoints());

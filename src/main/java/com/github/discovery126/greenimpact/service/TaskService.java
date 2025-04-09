@@ -2,8 +2,8 @@ package com.github.discovery126.greenimpact.service;
 
 import com.github.discovery126.greenimpact.dto.request.TaskRequest;
 import com.github.discovery126.greenimpact.dto.response.TaskResponse;
-import com.github.discovery126.greenimpact.exception.TaskNotFoundException;
-import com.github.discovery126.greenimpact.exception.UserNotFoundException;
+import com.github.discovery126.greenimpact.exception.CustomException;
+import com.github.discovery126.greenimpact.exception.ValidationConstants;
 import com.github.discovery126.greenimpact.mapper.TaskMapper;
 import com.github.discovery126.greenimpact.model.Task;
 import com.github.discovery126.greenimpact.model.TaskCategory;
@@ -57,7 +57,7 @@ public class TaskService {
 
         Optional<Task> taskOptional = taskRepository.findById(taskId);
         if (taskOptional.isEmpty())
-            throw new TaskNotFoundException("Задание с id %d не найдено".formatted(taskId));
+            throw new CustomException(ValidationConstants.TASK_ID_NOT_FOUND);
         Task task = taskOptional.get();
 
         TaskCategory taskCategory = taskCategoryService.getTaskCategory(taskRequest.getCategoryId());
@@ -77,7 +77,7 @@ public class TaskService {
         if (taskRepository.existsById(taskId)) {
             taskRepository.deleteById(taskId);
         } else {
-            throw new UserNotFoundException("Задание с id %d не найдено".formatted(taskId));
+            throw new CustomException(ValidationConstants.TASK_ID_NOT_FOUND);
         }
     }
 

@@ -2,8 +2,9 @@ package com.github.discovery126.greenimpact.controller;
 
 
 import com.github.discovery126.greenimpact.dto.response.*;
-import com.github.discovery126.greenimpact.exception.BadCommentException;
+import com.github.discovery126.greenimpact.exception.CustomException;
 import com.github.discovery126.greenimpact.exception.FileStorageException;
+import com.github.discovery126.greenimpact.exception.ValidationConstants;
 import com.github.discovery126.greenimpact.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -83,7 +84,7 @@ public class UserController {
                                                    @RequestPart(value = "comment",required = false) String comment,
                                                    @PathVariable Long taskId) {
         if (comment != null && comment.length() > 255) {
-            throw new BadCommentException("Комментарий не может быть длиннее 255 символов");
+            throw new CustomException(ValidationConstants.TASK_COMMENT_NOT_VALID);
         }
         try {
             s3Service.uploadFile(photos,taskId,comment);
