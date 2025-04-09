@@ -1,6 +1,6 @@
 package com.github.discovery126.greenimpact.exception;
 
-import com.github.discovery126.greenimpact.dto.BaseErrorResponse;
+import com.github.discovery126.greenimpact.dto.response.BaseErrorResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;

@@ -1,8 +1,10 @@
 package com.github.discovery126.greenimpact.controller;
 
+import com.github.discovery126.greenimpact.dto.response.BaseSuccessResponse;
 import com.github.discovery126.greenimpact.dto.response.RatingResponse;
 import com.github.discovery126.greenimpact.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,14 +20,22 @@ public class RatingController {
     private final UserService userService;
 
     @GetMapping("/week")
-    public ResponseEntity<List<RatingResponse>> getRatingWeek() {
+    public ResponseEntity<BaseSuccessResponse<List<RatingResponse>>> getRatingWeek() {
         return ResponseEntity
-                .ok(userService.getRatingWeek());
+                .ok(BaseSuccessResponse.<List<RatingResponse>>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(userService.getRatingWeek())
+                        .build()
+                );
     }
 
     @GetMapping("/month")
-    public ResponseEntity<List<RatingResponse>> getRatingMonth() {
+    public ResponseEntity<BaseSuccessResponse<List<RatingResponse>>> getRatingMonth() {
         return ResponseEntity
-                .ok(userService.getRatingMonth());
+                .ok(BaseSuccessResponse.<List<RatingResponse>>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(userService.getRatingMonth())
+                        .build()
+                );
     }
 }

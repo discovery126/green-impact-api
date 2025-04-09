@@ -1,6 +1,7 @@
 package com.github.discovery126.greenimpact.controller;
 
 
+import com.github.discovery126.greenimpact.dto.response.BaseSuccessResponse;
 import com.github.discovery126.greenimpact.dto.request.LoginRequest;
 import com.github.discovery126.greenimpact.dto.request.RegisterRequest;
 import com.github.discovery126.greenimpact.dto.response.TokenResponse;
@@ -29,8 +30,12 @@ public class RegisterController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> createJwtToken(@RequestBody @Valid LoginRequest loginRequest) {
+    public ResponseEntity<BaseSuccessResponse<TokenResponse>> createJwtToken(@RequestBody @Valid LoginRequest loginRequest) {
         return ResponseEntity
-                .ok(authService.login(loginRequest));
+                .ok(BaseSuccessResponse.<TokenResponse>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(authService.login(loginRequest))
+                        .build()
+                );
     }
 }

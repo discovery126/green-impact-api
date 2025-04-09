@@ -1,5 +1,6 @@
 package com.github.discovery126.greenimpact.controller;
 
+import com.github.discovery126.greenimpact.dto.response.BaseSuccessResponse;
 import com.github.discovery126.greenimpact.dto.request.TaskRequest;
 import com.github.discovery126.greenimpact.dto.response.TaskResponse;
 import com.github.discovery126.greenimpact.dto.response.TaskUserResponse;
@@ -25,22 +26,34 @@ public class AdminTaskController {
     private final TaskUserService taskUserService;
 
     @GetMapping
-    public ResponseEntity<List<TaskResponse>> getAllTasks() {
+    public ResponseEntity<BaseSuccessResponse<List<TaskResponse>>> getAllTasks() {
         return ResponseEntity
-                .ok(taskService.getAllTasks());
+                .ok(BaseSuccessResponse.<List<TaskResponse>>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(taskService.getAllTasks())
+                        .build()
+                );
     }
     @PostMapping
-    public ResponseEntity<TaskResponse> createTask(@Valid @RequestBody TaskRequest taskRequest) {
+    public ResponseEntity<BaseSuccessResponse<TaskResponse>> createTask(@Valid @RequestBody TaskRequest taskRequest) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(taskService.createTask(taskRequest));
+                .body(BaseSuccessResponse.<TaskResponse>builder()
+                        .code(HttpStatus.CREATED.value())
+                        .data(taskService.createTask(taskRequest))
+                        .build()
+                );
     }
 
     @PostMapping("{id}")
-    public ResponseEntity<TaskResponse> updateTask(@Valid @RequestBody TaskRequest taskRequest,
-                                                   @PathVariable Long id) {
+    public ResponseEntity<BaseSuccessResponse<TaskResponse>> updateTask(@Valid @RequestBody TaskRequest taskRequest,
+                                                                        @PathVariable Long id) {
         return ResponseEntity
-                .ok(taskService.updateTask(taskRequest,id));
+                .ok(BaseSuccessResponse.<TaskResponse>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(taskService.updateTask(taskRequest,id))
+                        .build()
+                );
     }
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
@@ -50,15 +63,23 @@ public class AdminTaskController {
                 .build();
     }
     @GetMapping("/completed-tasks")
-    public ResponseEntity<List<TaskUserResponse>> getCompletedTasks() {
+    public ResponseEntity<BaseSuccessResponse<List<TaskUserResponse>>> getCompletedTasks() {
         return ResponseEntity
-                .ok(taskUserService.getAllTaskCompletion());
+                .ok(BaseSuccessResponse.<List<TaskUserResponse>>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(taskUserService.getAllTaskCompletion())
+                        .build()
+                );
     }
 
     @PostMapping("/completed-tasks/{id}/answer")
-    public ResponseEntity<TaskUserResponse> answerCompletionTask(@PathVariable Long id,
+    public ResponseEntity<BaseSuccessResponse<TaskUserResponse>> answerCompletionTask(@PathVariable Long id,
                                                                        @RequestParam("status") TaskCompletionStatus status) {
         return ResponseEntity
-                .ok(taskUserService.answerCompletionTask(id,status));
+                .ok(BaseSuccessResponse.<TaskUserResponse>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(taskUserService.answerCompletionTask(id,status))
+                        .build()
+                );
     }
 }

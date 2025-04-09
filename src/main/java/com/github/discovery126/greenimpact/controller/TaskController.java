@@ -1,10 +1,12 @@
 package com.github.discovery126.greenimpact.controller;
 
+import com.github.discovery126.greenimpact.dto.response.BaseSuccessResponse;
 import com.github.discovery126.greenimpact.dto.response.TaskCategoryResponse;
 import com.github.discovery126.greenimpact.dto.response.TaskResponse;
 import com.github.discovery126.greenimpact.service.TaskCategoryService;
 import com.github.discovery126.greenimpact.service.TaskService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,14 +22,22 @@ public class TaskController {
     private final TaskCategoryService taskCategoryService;
 
     @GetMapping
-    public ResponseEntity<List<TaskResponse>> getTasks() {
+    public ResponseEntity<BaseSuccessResponse<List<TaskResponse>>> getTasks() {
             return ResponseEntity
-                    .ok(taskService.getAllTasksForUsers());
+                    .ok(BaseSuccessResponse.<List<TaskResponse>>builder()
+                            .code(HttpStatus.OK.value())
+                            .data(taskService.getAllTasksForUsers())
+                            .build()
+                    );
     }
 
     @GetMapping("/categories")
-    public ResponseEntity<List<TaskCategoryResponse>> getAllTasks() {
+    public ResponseEntity<BaseSuccessResponse<List<TaskCategoryResponse>>> getAllTasks() {
         return ResponseEntity
-                .ok(taskCategoryService.getAllCategories());
+                .ok(BaseSuccessResponse.<List<TaskCategoryResponse>>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(taskCategoryService.getAllCategories())
+                        .build()
+                );
     }
 }

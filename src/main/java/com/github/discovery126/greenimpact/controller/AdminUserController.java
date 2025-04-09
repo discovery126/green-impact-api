@@ -1,5 +1,6 @@
 package com.github.discovery126.greenimpact.controller;
 
+import com.github.discovery126.greenimpact.dto.response.BaseSuccessResponse;
 import com.github.discovery126.greenimpact.dto.request.UserRequest;
 import com.github.discovery126.greenimpact.dto.request.UserUpdateRequest;
 import com.github.discovery126.greenimpact.dto.response.UserResponse;
@@ -24,28 +25,40 @@ public class AdminUserController {
     private final UserMapper userMapper;
 
     @GetMapping
-    public ResponseEntity<Page<UserResponse>> getAllUsers(
+    public ResponseEntity<BaseSuccessResponse<Page<UserResponse>>> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id,asc") String sort
     ) {
         Page<User> userDtoPage = userService.getAllUsers(page,size,sort);
         return ResponseEntity
-                .ok(userDtoPage.map(userMapper::toResponse));
+                .ok(BaseSuccessResponse.<Page<UserResponse>>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(userDtoPage.map(userMapper::toResponse))
+                        .build()
+                );
     }
 
     @PostMapping
-    public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserRequest userRequest) {
+    public ResponseEntity<BaseSuccessResponse<UserResponse>> createUser(@RequestBody @Valid UserRequest userRequest) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(userService.createUser(userRequest));
+                .body(BaseSuccessResponse.<UserResponse>builder()
+                        .code(HttpStatus.CREATED.value())
+                        .data(userService.createUser(userRequest))
+                        .build()
+                );
     }
     @PostMapping("{id}")
-    public ResponseEntity<UserResponse> updateUser(@RequestBody @Valid UserUpdateRequest userUpdateRequest,
+    public ResponseEntity<BaseSuccessResponse<UserResponse>> updateUser(@RequestBody @Valid UserUpdateRequest userUpdateRequest,
                                                    @PathVariable Long id) {
 
         return ResponseEntity
-                .ok(userService.updateUser(userUpdateRequest,id));
+                .ok(BaseSuccessResponse.<UserResponse>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(userService.updateUser(userUpdateRequest,id))
+                        .build()
+                );
     }
 
     @DeleteMapping("{id}")

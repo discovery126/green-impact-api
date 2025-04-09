@@ -145,7 +145,7 @@ public class EventService {
 
         userEventRepository.save(userEvent);
     }
-    public UserEventResponse confirmEvent(Long eventId, String eventCode) {
+    public void confirmEvent(Long eventId, String eventCode) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new CustomException(ValidationConstants.EVENT_ID_NOT_FOUND));
         if (!event.getEventCode().equals(eventCode)) {
@@ -161,13 +161,5 @@ public class EventService {
         userEvent.setConfirmedAt(LocalDateTime.now());
         user.setPoints(user.getPoints() + event.getEventPoints());
         userEventRepository.save(userEvent);
-
-        return UserEventResponse.builder()
-                .id(userEvent.getId())
-                .userResponse(userMapper.toResponse(user))
-                .eventResponse(eventMapper.toResponse(event))
-                .registeredAt(userEvent.getRegisteredAt())
-                .confirmedAt(userEvent.getConfirmedAt())
-                .build();
     }
 }

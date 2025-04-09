@@ -1,10 +1,11 @@
 package com.github.discovery126.greenimpact.controller;
 
+import com.github.discovery126.greenimpact.dto.response.BaseSuccessResponse;
 import com.github.discovery126.greenimpact.dto.response.EventResponse;
 import com.github.discovery126.greenimpact.service.EventService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,8 +19,12 @@ public class EventController {
     private final EventService eventService;
 
     @GetMapping
-    public ResponseEntity<List<EventResponse>> getAllEvents() {
+    public ResponseEntity<BaseSuccessResponse<List<EventResponse>>> getAllEvents() {
         return ResponseEntity
-                .ok(eventService.getAvailableEvents());
+                .ok(BaseSuccessResponse.<List<EventResponse>>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(eventService.getAvailableEvents())
+                        .build()
+                );
     }
 }

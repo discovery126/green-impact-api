@@ -1,6 +1,7 @@
 package com.github.discovery126.greenimpact.controller;
 
 
+import com.github.discovery126.greenimpact.dto.response.BaseSuccessResponse;
 import com.github.discovery126.greenimpact.dto.response.*;
 import com.github.discovery126.greenimpact.exception.CustomException;
 import com.github.discovery126.greenimpact.exception.FileStorageException;
@@ -33,41 +34,65 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping
-    public ResponseEntity<UserResponse> getUser() {
+    public ResponseEntity<BaseSuccessResponse<UserResponse>> getUser() {
         return ResponseEntity
-                .ok(userService.getUser());
+                .ok(BaseSuccessResponse.<UserResponse>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(userService.getUser())
+                        .build()
+                );
     }
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/events")
-    public ResponseEntity<List<UserEventResponse>> getUserEvents() {
+    public ResponseEntity<BaseSuccessResponse<List<UserEventResponse>>> getUserEvents() {
         return ResponseEntity
-                .ok(userEventService.getUserEvents());
+                .ok(BaseSuccessResponse.<List<UserEventResponse>>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(userEventService.getUserEvents())
+                        .build()
+                );
     }
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/rewards")
-    public ResponseEntity<List<UserRewardResponse>> getUserRewards() {
+    public ResponseEntity<BaseSuccessResponse<List<UserRewardResponse>>> getUserRewards() {
         return ResponseEntity
-                .ok(userRewardService.getUserRewards());
+                .ok(BaseSuccessResponse.<List<UserRewardResponse>>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(userRewardService.getUserRewards())
+                        .build()
+                );
     }
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/completed-tasks")
-    public ResponseEntity<List<TaskUserResponse>> getCompletedTasks() {
+    public ResponseEntity<BaseSuccessResponse<List<TaskUserResponse>>> getCompletedTasks() {
         return ResponseEntity
-                .ok(taskUserService.getUserCompletionsTasks());
+                .ok(BaseSuccessResponse.<List<TaskUserResponse>>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(taskUserService.getUserCompletionsTasks())
+                        .build()
+                );
     }
 
     @GetMapping("/tasks")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<List<TaskResponse>> getTasks() {
+    public ResponseEntity<BaseSuccessResponse<List<TaskResponse>>> getTasks() {
         return ResponseEntity
-                .ok(userService.getUserTasks());
+                .ok(BaseSuccessResponse.<List<TaskResponse>>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(userService.getUserTasks())
+                        .build()
+                );
     }
 
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/active-tasks")
-    public ResponseEntity<List<TaskResponse>> getActiveTasks() {
+    public ResponseEntity<BaseSuccessResponse<List<TaskResponse>>> getActiveTasks() {
         return ResponseEntity
-                .ok(taskService.getActiveTasks());
+                .ok(BaseSuccessResponse.<List<TaskResponse>>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(taskService.getActiveTasks())
+                        .build()
+                );
     }
 
     @PreAuthorize("hasAuthority('USER')")
@@ -117,8 +142,9 @@ public class UserController {
     @PostMapping("events/{eventId}/confirm")
     public ResponseEntity<UserEventResponse> confirmEvent(@PathVariable Long eventId,
                                                           @RequestParam String eventCode) {
+        eventService.confirmEvent(eventId,eventCode);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(eventService.confirmEvent(eventId,eventCode));
+                .build();
     }
 }

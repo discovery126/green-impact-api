@@ -1,5 +1,6 @@
 package com.github.discovery126.greenimpact.controller;
 
+import com.github.discovery126.greenimpact.dto.response.BaseSuccessResponse;
 import com.github.discovery126.greenimpact.dto.request.RewardRequest;
 import com.github.discovery126.greenimpact.dto.response.RewardResponse;
 import com.github.discovery126.greenimpact.service.RewardService;
@@ -21,22 +22,34 @@ public class AdminRewardController {
     private final RewardService rewardService;
 
     @GetMapping
-    public ResponseEntity<List<RewardResponse>> getAllRewards() {
+    public ResponseEntity<BaseSuccessResponse<List<RewardResponse>>> getAllRewards() {
         return ResponseEntity
-                .ok(rewardService.getAllRewards());
+                .ok(BaseSuccessResponse.<List<RewardResponse>>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(rewardService.getAllRewards())
+                        .build()
+                );
     }
     @PostMapping
-    public ResponseEntity<RewardResponse> createReward(@RequestBody @Valid RewardRequest rewardRequest) {
+    public ResponseEntity<BaseSuccessResponse<RewardResponse>> createReward(@RequestBody @Valid RewardRequest rewardRequest) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(rewardService.createReward(rewardRequest));
+                .body(BaseSuccessResponse.<RewardResponse>builder()
+                        .code(HttpStatus.CREATED.value())
+                        .data(rewardService.createReward(rewardRequest))
+                        .build()
+                );
     }
 
     @PostMapping("{id}")
-    public ResponseEntity<RewardResponse> updateReward(@RequestBody @Valid RewardRequest rewardRequest,
+    public ResponseEntity<BaseSuccessResponse<RewardResponse>> updateReward(@RequestBody @Valid RewardRequest rewardRequest,
                                                        @PathVariable Long id) {
         return ResponseEntity
-                .ok(rewardService.updateReward(rewardRequest,id));
+                .ok(BaseSuccessResponse.<RewardResponse>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(rewardService.updateReward(rewardRequest,id))
+                        .build()
+                );
     }
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteReward(@PathVariable Long id) {
