@@ -5,7 +5,6 @@ import com.github.discovery126.greenimpact.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,24 +13,25 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = """
-SELECT users.display_name, COALESCE(SUM(tasks_points.points), 0) + COALESCE(SUM(events_points.points), 0) AS total_points
-FROM users
+SELECT u.display_name, 
+       COALESCE(tp.total_task_points, 0) + COALESCE(ep.total_event_points, 0) AS total_points
+FROM users u
 LEFT JOIN (
-        SELECT tasks_completion.user_id, tasks.points
-        FROM tasks_completion
-        LEFT JOIN tasks ON tasks_completion.task_id = tasks.id
-        WHERE tasks_completion.verified_at >= :startDate
-          AND tasks_completion.verified_at < :endDate
-    ) AS tasks_points ON users.id = tasks_points.user_id
+    SELECT tus.user_id, SUM(t.points) AS total_task_points
+    FROM tasks_users_status tus
+    LEFT JOIN tasks t ON tus.task_id = t.id
+    WHERE tus.verified_at >= :startDate AND tus.verified_at < :endDate
+    GROUP BY tus.user_id
+) tp ON u.id = tp.user_id
 LEFT JOIN (
-        SELECT users_events.user_id, events.event_points AS points
-        FROM users_events
-        LEFT JOIN events ON users_events.event_id = events.id
-        WHERE users_events.confirmed_at >= :startDate
-          AND users_events.confirmed_at < :endDate
-    ) AS events_points ON users.id = events_points.user_id
-GROUP BY users.display_name
-ORDER BY total_points DESC;
+    SELECT ue.user_id, SUM(e.event_points) AS total_event_points
+    FROM users_events ue
+    LEFT JOIN events e ON ue.event_id = e.id
+    WHERE ue.confirmed_at >= :startDate AND ue.confirmed_at < :endDate
+    GROUP BY ue.user_id
+) ep ON u.id = ep.user_id
+ORDER BY total_points DESC, u.created_at ASC
+LIMIT 10;
 """,nativeQuery = true)
     List<RatingResponse> findRatingByStartDateAndEndDate(@Param("startDate") LocalDate startDate,
                                                          @Param("endDate") LocalDate endDate);
