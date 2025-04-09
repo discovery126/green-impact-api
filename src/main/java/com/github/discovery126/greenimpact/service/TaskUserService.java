@@ -1,6 +1,5 @@
 package com.github.discovery126.greenimpact.service;
 
-import com.github.discovery126.greenimpact.dto.request.CompleteTaskRequest;
 import com.github.discovery126.greenimpact.dto.response.TaskUserResponse;
 import com.github.discovery126.greenimpact.exception.TaskAlreadyAnsweredException;
 import com.github.discovery126.greenimpact.exception.TaskAlreadyTakenException;
@@ -53,7 +52,7 @@ public class TaskUserService {
                 .build()
         );
     }
-    public void saveCompletion(CompleteTaskRequest completeTaskRequest,
+    public void saveCompletion(String comment,
                                Long taskId,
                                List<String> fileUrls
     ) {
@@ -87,7 +86,7 @@ public class TaskUserService {
                 .task(task)
                 .status(TaskCompletionStatus.PENDING)
                 .completedAt(LocalDateTime.now())
-                .description(completeTaskRequest.getDescription())
+                .description(comment)
                 .build();
 
         List<TaskProof> taskProofs = fileUrls.stream()

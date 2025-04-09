@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query(value = """
-SELECT DISTINCT ON (t.id) t.*,tus_any,tus_today
+SELECT DISTINCT ON (t.id) t.*
 FROM tasks t
          LEFT JOIN tasks_users_status tus_today
                    ON t.id = tus_today.task_id

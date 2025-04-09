@@ -1,11 +1,10 @@
 package com.github.discovery126.greenimpact.controller;
 
 
-import com.github.discovery126.greenimpact.dto.request.CompleteTaskRequest;
 import com.github.discovery126.greenimpact.dto.response.*;
+import com.github.discovery126.greenimpact.exception.BadCommentException;
 import com.github.discovery126.greenimpact.exception.FileStorageException;
 import com.github.discovery126.greenimpact.service.*;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,12 +78,15 @@ public class UserController {
                 .build();
     }
     @PreAuthorize("hasAuthority('USER')")
-    @PostMapping("/tasks/{taskId}/complete")
+    @PostMapping("/tasks/{taskId}/submit")
     public ResponseEntity<Void> uploadFile(@RequestPart("photos") List<MultipartFile> photos,
-                                                   @RequestPart("description") @Valid CompleteTaskRequest completeTaskRequest,
+                                                   @RequestPart(value = "comment",required = false) String comment,
                                                    @PathVariable Long taskId) {
+        if (comment != null && comment.length() > 255) {
+            throw new BadCommentException("Комментарий не может быть длиннее 255 символов");
+        }
         try {
-            s3Service.uploadFile(photos,taskId,completeTaskRequest);
+            s3Service.uploadFile(photos,taskId,comment);
             return ResponseEntity
                     .status(HttpStatus.CREATED)
                     .build();

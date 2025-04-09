@@ -41,16 +41,17 @@ public interface TaskUserRepository extends JpaRepository<TaskUser, Long> {
     @Query(value = """
             SELECT tuc.*
             FROM tasks_users_status tuc
-            WHERE tuc.user_id = :userId
-              AND tuc.task_id = :taskId
-              AND tuc.completed_at is NULL;""",nativeQuery = true)
+            WHERE tuc.user_id = :userId AND
+                  tuc.taken_at::DATE = CURRENT_DATE AND
+                  tuc.completed_at IS NULL;""",nativeQuery = true)
     TaskUser findUncompletedByUserAndTask(@Param("userId") Long userId,
                                           @Param("taskId") Long taskId);
     @Query(value = """
             SELECT tuc.*
             FROM tasks_users_status tuc
-            WHERE tuc.user_id = :userId
-              AND tuc.completed_at IS NOT NULL;""",nativeQuery = true)
+            WHERE tuc.user_id = :userId AND
+              tuc.taken_at::DATE = CURRENT_DATE AND 
+              tuc.completed_at IS NOT NULL;""",nativeQuery = true)
     List<TaskUser> findAllCompletedByUserId(Long userId);
 
     @Query(value = """
