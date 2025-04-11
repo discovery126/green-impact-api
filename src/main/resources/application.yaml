@@ -13,6 +13,8 @@ jwt:
   access_token_expiration: "${JWT_LIFETIME_ACCESS}" # 10 hours
 
 spring:
+  config:
+    import: file:.env[.properties]
   servlet:
     multipart:
       enabled: true
@@ -22,9 +24,9 @@ spring:
     name: greenimpact
 
   datasource:
-    url: jdbc:postgresql://localhost/green-impact
-    username: "${LOGIN_BD:greenimpact}"
-    password: "${PASS_BD:password}"
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -47,5 +49,5 @@ open-cage:
 s3:
   access-key: "${S3_ACCESS_KEY}"
   secret-key: "${S3_SECRET_KEY}"
-  bucket-name: "${BUCKET_NAME}"
+  bucket-name: "${S3_BUCKET_NAME}"
 
