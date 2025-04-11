@@ -79,6 +79,7 @@ public class SecurityConfig {
                                        "/v1/events/**",
                                        "/v1/rewards/**",
                                        "/v1/rating/**",
+                                       "/v1/cities/**",
                                        "/v1/login",
                                        "/error").permitAll()
                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**") .permitAll()

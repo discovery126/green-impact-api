@@ -21,15 +21,6 @@ public class AdminCityController {
 
     private final CityService cityService;
 
-    @GetMapping
-    public ResponseEntity<BaseSuccessResponse<List<CityResponse>>> getAllCities() {
-        return ResponseEntity
-                .ok(BaseSuccessResponse.<List<CityResponse>>builder()
-                        .code(HttpStatus.OK.value())
-                        .data(cityService.getAllCities())
-                        .build()
-                );
-    }
     @PostMapping
     public ResponseEntity<BaseSuccessResponse<CityResponse>> createCity(@RequestBody @Valid CityRequest cityRequest) {
         return ResponseEntity
