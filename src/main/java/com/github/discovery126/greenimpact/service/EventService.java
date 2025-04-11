@@ -1,6 +1,7 @@
 package com.github.discovery126.greenimpact.service;
 
 import com.github.discovery126.greenimpact.dto.request.EventRequest;
+import com.github.discovery126.greenimpact.dto.response.BooleanResponse;
 import com.github.discovery126.greenimpact.dto.response.EventResponse;
 import com.github.discovery126.greenimpact.dto.response.UserEventResponse;
 import com.github.discovery126.greenimpact.exception.CustomException;
@@ -45,7 +46,7 @@ public class EventService {
         EventStatus eventStatus = EventStatus.SCHEDULED;
 
         Event event = Event.builder()
-                .name(eventRequest.getName())
+                .title(eventRequest.getTitle())
                 .description(eventRequest.getDescription())
                 .city(city)
                 .street(eventRequest.getStreet())
@@ -99,7 +100,7 @@ public class EventService {
             updateFieldIfChanged(event.getLongitude(), geometry.getLongitude(), event::setLongitude);
         }
 
-        updateFieldIfChanged(event.getName(), eventRequest.getName(), event::setName);
+        updateFieldIfChanged(event.getTitle(), eventRequest.getTitle(), event::setTitle);
         updateFieldIfChanged(event.getDescription(), eventRequest.getDescription(), event::setDescription);
         updateFieldIfChanged(event.getStreet(), eventRequest.getStreet(), event::setStreet);
         updateFieldIfChanged(event.getHouseNumber(), eventRequest.getHouseNumber(), event::setHouseNumber);
@@ -161,5 +162,9 @@ public class EventService {
         userEvent.setConfirmedAt(LocalDateTime.now());
         user.setPoints(user.getPoints() + event.getEventPoints());
         userEventRepository.save(userEvent);
+    }
+
+    public BooleanResponse isUserRegisteredForEvent(Long eventId) {
+        return new BooleanResponse(userEventRepository.existsByUserIdAndEventId(securitySessionContext.getId(),eventId));
     }
 }

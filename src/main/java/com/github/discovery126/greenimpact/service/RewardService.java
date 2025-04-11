@@ -45,7 +45,7 @@ public class RewardService {
         Reward reward = Reward.builder()
                 .title(rewardRequest.getTitle())
                 .description(rewardRequest.getDescription())
-                .costPoints(rewardRequest.getCategoryId())
+                .costPoints(rewardRequest.getCostPoints())
                 .amount(rewardRequest.getAmount())
                 .type(rewardType)
                 .category(rewardCategory)

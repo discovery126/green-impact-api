@@ -19,7 +19,7 @@ public class EventResponse {
 
     private long id;
 
-    private String name;
+    private String title;
 
     private String description;
 
@@ -39,7 +39,7 @@ public class EventResponse {
     private String organiserPhone;
 
     private String street;
-
+    @JsonProperty("house_number")
     private Integer houseNumber;
 
     private String status;

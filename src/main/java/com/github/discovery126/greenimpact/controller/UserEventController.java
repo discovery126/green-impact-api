@@ -1,6 +1,7 @@
 package com.github.discovery126.greenimpact.controller;
 
-import com.github.discovery126.greenimpact.dto.response.UserEventResponse;
+import com.github.discovery126.greenimpact.dto.response.BaseSuccessResponse;
+import com.github.discovery126.greenimpact.dto.response.BooleanResponse;
 import com.github.discovery126.greenimpact.service.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,11 +24,23 @@ public class UserEventController {
                 .build();
     }
     @PostMapping("/{eventId}/confirm")
-    public ResponseEntity<UserEventResponse> confirmEvent(@PathVariable Long eventId,
+    public ResponseEntity<Void> confirmEvent(@PathVariable Long eventId,
                                                           @RequestParam String eventCode) {
         eventService.confirmEvent(eventId,eventCode);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .build();
+    }
+
+    @PostMapping("/{eventId}/registered")
+    public ResponseEntity<BaseSuccessResponse<BooleanResponse>> isUserRegisteredForEvent(@PathVariable Long eventId) {
+        eventService.isUserRegisteredForEvent(eventId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(BaseSuccessResponse.<BooleanResponse>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(eventService.isUserRegisteredForEvent(eventId))
+                        .build()
+                );
     }
 }

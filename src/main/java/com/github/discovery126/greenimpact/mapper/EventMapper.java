@@ -11,7 +11,7 @@ public class EventMapper {
     public EventResponse toResponse(Event event) {
         return EventResponse.builder()
                 .id(event.getId())
-                .name(event.getName())
+                .title(event.getTitle())
                 .description(event.getDescription())
                 .city(event.getCity())
                 .street(event.getStreet())

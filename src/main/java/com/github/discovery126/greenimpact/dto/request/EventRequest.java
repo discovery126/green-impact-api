@@ -17,7 +17,7 @@ public class EventRequest {
 
     @NotNull(message = "Название мероприятия не может быть пустым.")
     @Size(min = 5, max = 100, message = "Название мероприятия должно содержать от 5 до 100 символов.")
-    private String name;
+    private String title;
 
     @NotNull(message = "Описание мероприятия не может быть пустым.")
     @Size(min = 10, max = 255, message = "Описание мероприятия должно содержать от 20 до 255 символов.")
