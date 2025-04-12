@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Builder
 @Data
@@ -36,5 +37,5 @@ public class UserReward {
 
     @Column(name = "issued_at")
     @Builder.Default
-    private LocalDateTime issuedAt = LocalDateTime.now();
+    private LocalDateTime issuedAt = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
 }

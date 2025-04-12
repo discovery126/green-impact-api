@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Service
@@ -85,7 +86,7 @@ public class TaskUserService {
                 .user(user)
                 .task(task)
                 .status(TaskCompletionStatus.PENDING)
-                .completedAt(LocalDateTime.now())
+                .completedAt(LocalDateTime.now(ZoneId.of("Europe/Moscow")))
                 .description(comment)
                 .build();
 
@@ -136,7 +137,7 @@ public class TaskUserService {
         }
         taskUser.setStatus(status);
         taskUser.setAdmin(admin);
-        taskUser.setVerifiedAt(LocalDateTime.now());
+        taskUser.setVerifiedAt(LocalDateTime.now(ZoneId.of("Europe/Moscow")));
         taskUser.getUser().setPoints(taskUser.getUser().getPoints() + taskUser.getTask().getPoints());
         return taskUserMapper.toResponse(taskUserRepository.save(taskUser));
     }

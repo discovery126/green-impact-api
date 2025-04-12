@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Builder
@@ -31,7 +32,7 @@ public class TaskUser {
 
     @Column(name="taken_at")
     @Builder.Default
-    private LocalDateTime takenAt = LocalDateTime.now();
+    private LocalDateTime takenAt = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
 
     @Column(nullable = false)
     private String description;

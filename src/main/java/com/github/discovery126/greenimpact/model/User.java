@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Set;
 
 @Builder
@@ -37,7 +38,7 @@ public class User {
 
     @Column
     @Builder.Default
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
 
     @ManyToOne
     @JoinColumn(name = "city_id")

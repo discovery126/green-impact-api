@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Builder
 @Data
@@ -29,7 +30,7 @@ public class UserEvent {
 
     @Column(name = "registered_at")
     @Builder.Default
-    private LocalDateTime registeredAt = LocalDateTime.now();
+    private LocalDateTime registeredAt = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
 
     @Column(name ="confirmed_at")
     private LocalDateTime confirmedAt;
