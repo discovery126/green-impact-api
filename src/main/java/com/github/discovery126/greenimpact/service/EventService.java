@@ -149,6 +149,9 @@ public class EventService {
     public void confirmEvent(Long eventId, String eventCode) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new CustomException(ValidationConstants.EVENT_ID_NOT_FOUND));
+        if (event.getStatus()!=EventStatus.ACTIVE) {
+            throw new CustomException(ValidationConstants.EVENT_NOT_ACTIVE);
+        }
         if (!event.getEventCode().equals(eventCode)) {
             throw new CustomException(ValidationConstants.EVENT_BAD_CODE);
         }
@@ -166,5 +169,9 @@ public class EventService {
 
     public BooleanResponse isUserRegisteredForEvent(Long eventId) {
         return new BooleanResponse(userEventRepository.existsByUserIdAndEventId(securitySessionContext.getId(),eventId));
+    }
+
+    public BooleanResponse isUserConfirmedEvent(Long eventId) {
+        return new BooleanResponse(userEventRepository.existsByUserIdAndEventIdAndConfirmedAtNotNull(securitySessionContext.getId(),eventId));
     }
 }

@@ -32,6 +32,7 @@ public interface ValidationConstants {
     String USER_UNAUTHORIZED = "Пользователь не авторизован";
 
     String EVENT_ID_NOT_FOUND = "Мероприятие с таким id не найдено";
+    String EVENT_NOT_ACTIVE = "Это мероприятие ещё не наступило или уже прошло";
     String EVENT_USER_ALREADY_CONFIRM = "Пользователь уже подтвердил участие в мероприятие";
     String EVENT_USER_ALREADY_REGISTERED = "Пользователь уже зарегистрирован";
     String EVENT_BAD_CODE = "Код неправильный";

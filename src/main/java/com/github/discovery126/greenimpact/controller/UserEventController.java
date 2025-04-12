@@ -34,12 +34,21 @@ public class UserEventController {
 
     @PostMapping("/{eventId}/registered")
     public ResponseEntity<BaseSuccessResponse<BooleanResponse>> isUserRegisteredForEvent(@PathVariable Long eventId) {
-        eventService.isUserRegisteredForEvent(eventId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(BaseSuccessResponse.<BooleanResponse>builder()
                         .code(HttpStatus.OK.value())
                         .data(eventService.isUserRegisteredForEvent(eventId))
+                        .build()
+                );
+    }
+    @PostMapping("/{eventId}/confirmed")
+    public ResponseEntity<BaseSuccessResponse<BooleanResponse>> isUserConfirmedEvent(@PathVariable Long eventId) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(BaseSuccessResponse.<BooleanResponse>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(eventService.isUserConfirmedEvent(eventId))
                         .build()
                 );
     }

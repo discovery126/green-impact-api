@@ -1,7 +1,6 @@
 package com.github.discovery126.greenimpact.service;
 
 import com.github.discovery126.greenimpact.dto.response.UserEventResponse;
-import com.github.discovery126.greenimpact.mapper.EventMapper;
 import com.github.discovery126.greenimpact.mapper.UserEventMapper;
 import com.github.discovery126.greenimpact.repository.UserEventRepository;
 import com.github.discovery126.greenimpact.security.SecuritySessionContext;
@@ -18,7 +17,7 @@ public class UserEventService {
     private final SecuritySessionContext securitySessionContext;
 
     public List<UserEventResponse> getUserEvents() {
-        return userEventRepository.findAllByUserId(securitySessionContext.getId())
+        return userEventRepository.findAllByUserIdOrderByRegisteredAtDesc(securitySessionContext.getId())
                 .stream()
                 .map(userEventMapper::toResponse)
                 .toList();

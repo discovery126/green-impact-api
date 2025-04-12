@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface UserEventRepository extends JpaRepository<UserEvent, Long> {
     boolean existsByUserIdAndEventId(Long userId, Long eventId);
+    boolean existsByUserIdAndEventIdAndConfirmedAtNotNull(Long user_id, Long event_id);
     UserEvent findByUserIdAndEventId(Long userId, Long eventId);
-    List<UserEvent> findAllByUserId(Long userId);
+    List<UserEvent> findAllByUserIdOrderByRegisteredAtDesc(Long userId);
 }
