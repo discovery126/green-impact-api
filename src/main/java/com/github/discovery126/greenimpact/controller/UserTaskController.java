@@ -48,6 +48,7 @@ public class UserTaskController {
                     .status(HttpStatus.CREATED)
                     .build();
         } catch (IOException e) {
+            // TODO: Обработать IOException в Custom Exception Handler
             throw new FileStorageException("Неизвестная ошибка с файлами");
         }
     }

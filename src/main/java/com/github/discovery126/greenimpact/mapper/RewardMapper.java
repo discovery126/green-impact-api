@@ -1,5 +1,6 @@
 package com.github.discovery126.greenimpact.mapper;
 
+import com.github.discovery126.greenimpact.dto.response.RewardCategoryResponse;
 import com.github.discovery126.greenimpact.dto.response.RewardResponse;
 import com.github.discovery126.greenimpact.model.Reward;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,10 @@ public class RewardMapper {
                 .title(reward.getTitle())
                 .description(reward.getDescription())
                 .costPoints(reward.getCostPoints())
-                .category(reward.getCategory())
+                .category(RewardCategoryResponse.builder()
+                        .id(reward.getCategory().getId())
+                        .nameCategory(reward.getCategory().getNameCategory())
+                        .build())
                 .type(reward.getType().name())
                 .amount(reward.getAmount())
                 .createdAt(reward.getCreatedAt())

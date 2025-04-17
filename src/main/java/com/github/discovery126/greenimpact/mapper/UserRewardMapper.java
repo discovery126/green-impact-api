@@ -16,6 +16,7 @@ public class UserRewardMapper {
                 .id(userReward.getId())
                 .userResponse(userMapper.toResponse(userReward.getUser()))
                 .rewardResponse(rewardMapper.toResponse(userReward.getReward()))
+                .promoCode(userReward.getPromoCode())
                 .status(userReward.getStatus().name())
                 .issuedAt(userReward.getIssuedAt())
                 .build();

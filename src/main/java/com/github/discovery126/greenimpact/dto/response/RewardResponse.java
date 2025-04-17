@@ -32,5 +32,5 @@ public class RewardResponse {
     @JsonProperty("created_at")
     private LocalDateTime createdAt;
 
-    private RewardCategory category;
+    private RewardCategoryResponse category;
 }

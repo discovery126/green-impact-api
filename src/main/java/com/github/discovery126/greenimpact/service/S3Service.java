@@ -6,6 +6,7 @@ import com.github.discovery126.greenimpact.exception.ValidationConstants;
 import com.github.discovery126.greenimpact.repository.TaskRepository;
 import com.github.discovery126.greenimpact.security.SecuritySessionContext;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
@@ -40,9 +41,10 @@ public class S3Service {
         this.taskUserService = taskUserService;
     }
 
+    @Transactional
     public void uploadFile(List<MultipartFile> photos, Long taskId,
                                    String comment) throws IOException {
-        if (photos.isEmpty() || (photos.size() == 1 && photos.getFirst().isEmpty())) {
+        if (photos.isEmpty() || (photos.size() == 1 && photos.get(0).isEmpty())) {
             throw new CustomException(ValidationConstants.PHOTO_NOT_UPLOAD);
         }
         if (!taskRepository.existsById(taskId)) {

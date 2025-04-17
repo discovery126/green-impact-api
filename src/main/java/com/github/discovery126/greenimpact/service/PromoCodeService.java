@@ -8,7 +8,7 @@ import java.security.SecureRandom;
 @Service
 @RequiredArgsConstructor
 public class PromoCodeService implements PromoCodeGenerator {
-    private static final int CODE_LENGTH = 100;
+    private static final int CODE_LENGTH = 30;
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     @Override

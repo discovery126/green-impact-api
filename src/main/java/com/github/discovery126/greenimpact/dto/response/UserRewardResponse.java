@@ -28,6 +28,6 @@ public class UserRewardResponse {
 
     private String status;
 
-    @Column(name = "issued_at")
+    @JsonProperty("issued_at")
     private LocalDateTime issuedAt;
 }
