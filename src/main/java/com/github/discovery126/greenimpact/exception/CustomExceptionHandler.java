@@ -67,7 +67,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<BaseErrorResponse> handleBadCredentialsException(BadCredentialsException ex) {
         return ResponseEntity
-                .badRequest()
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(new BaseErrorResponse(HttpStatus.UNAUTHORIZED.value(),
                         Collections.singletonList(ValidationConstants.BAD_CREDENTIALS)));
     }

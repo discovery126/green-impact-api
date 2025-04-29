@@ -6,8 +6,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class EventMapper {
-
-
     public EventResponse toResponse(Event event) {
         return EventResponse.builder()
                 .id(event.getId())
