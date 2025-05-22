@@ -87,6 +87,7 @@ public class TaskService {
                 .map(taskMapper::toResponse)
                 .toList();
     }
+
     public List<TaskResponse> getActiveTasks() {
         return taskRepository.findAllUncompletedActiveTasksByUser(securitySessionContext.getId())
                 .stream()

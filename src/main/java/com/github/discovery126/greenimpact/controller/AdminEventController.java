@@ -1,7 +1,7 @@
 package com.github.discovery126.greenimpact.controller;
 
-import com.github.discovery126.greenimpact.dto.response.BaseSuccessResponse;
 import com.github.discovery126.greenimpact.dto.request.EventRequest;
+import com.github.discovery126.greenimpact.dto.response.BaseSuccessResponse;
 import com.github.discovery126.greenimpact.dto.response.EventResponse;
 import com.github.discovery126.greenimpact.service.EventService;
 import jakarta.validation.Valid;

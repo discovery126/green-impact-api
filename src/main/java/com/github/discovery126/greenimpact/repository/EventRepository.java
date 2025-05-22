@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
     @Modifying
@@ -19,4 +20,5 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Transactional
     @Query("UPDATE Event e SET e.status = 'COMPLETED' WHERE e.endDate < :now AND e.status != 'COMPLETED'")
     void updateStatusForCompletedEvents(@Param("now") LocalDateTime now);
+    List<Event> findAllByOrderByStartDate();
 }

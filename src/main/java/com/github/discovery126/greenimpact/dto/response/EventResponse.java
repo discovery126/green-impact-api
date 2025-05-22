@@ -1,8 +1,6 @@
 package com.github.discovery126.greenimpact.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.discovery126.greenimpact.model.City;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -49,5 +47,5 @@ public class EventResponse {
     private BigDecimal longitude;
 
     @JsonProperty("city")
-    private City city;
+    private CityResponse city;
 }

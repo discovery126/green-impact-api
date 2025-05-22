@@ -1,12 +1,9 @@
 package com.github.discovery126.greenimpact.controller;
 
-import com.github.discovery126.greenimpact.dto.response.BaseSuccessResponse;
-import com.github.discovery126.greenimpact.dto.response.TaskResponse;
 import com.github.discovery126.greenimpact.exception.CustomException;
 import com.github.discovery126.greenimpact.exception.FileStorageException;
 import com.github.discovery126.greenimpact.exception.ValidationConstants;
 import com.github.discovery126.greenimpact.service.S3Service;
-import com.github.discovery126.greenimpact.service.TaskService;
 import com.github.discovery126.greenimpact.service.TaskUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

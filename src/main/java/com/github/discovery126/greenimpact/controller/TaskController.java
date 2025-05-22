@@ -32,7 +32,7 @@ public class TaskController {
     }
 
     @GetMapping("/categories")
-    public ResponseEntity<BaseSuccessResponse<List<TaskCategoryResponse>>> getAllTasks() {
+    public ResponseEntity<BaseSuccessResponse<List<TaskCategoryResponse>>> getAllTasksCategories() {
         return ResponseEntity
                 .ok(BaseSuccessResponse.<List<TaskCategoryResponse>>builder()
                         .code(HttpStatus.OK.value())

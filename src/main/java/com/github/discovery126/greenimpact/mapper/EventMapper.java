@@ -1,5 +1,6 @@
 package com.github.discovery126.greenimpact.mapper;
 
+import com.github.discovery126.greenimpact.dto.response.CityResponse;
 import com.github.discovery126.greenimpact.dto.response.EventResponse;
 import com.github.discovery126.greenimpact.model.Event;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,12 @@ public class EventMapper {
                 .id(event.getId())
                 .title(event.getTitle())
                 .description(event.getDescription())
-                .city(event.getCity())
+                .city(CityResponse.builder()
+                        .id(event.getCity().getId())
+                        .nameCity(event.getCity().getNameCity())
+                        .latitude(event.getCity().getLatitude())
+                        .longitude(event.getCity().getLongitude())
+                        .build())
                 .street(event.getStreet())
                 .houseNumber(event.getHouseNumber())
                 .organiserName(event.getOrganiserName())

@@ -155,7 +155,7 @@ public class UserService {
     }
 
     public List<TaskResponse> getUserTasks() {
-            return taskService.getTasksForCurrentUser(securitySessionContext.getId());
+        return taskService.getTasksForCurrentUser(securitySessionContext.getId());
     }
 
     public UserResponse getUser() {
