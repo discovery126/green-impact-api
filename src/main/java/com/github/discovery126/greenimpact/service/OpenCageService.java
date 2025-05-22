@@ -5,13 +5,12 @@ import com.github.discovery126.greenimpact.exception.ValidationConstants;
 import com.github.discovery126.greenimpact.model.City;
 import com.github.discovery126.greenimpact.utils.Geometry;
 import com.opencagedata.jopencage.JOpenCageGeocoder;
-import com.opencagedata.jopencage.model.JOpenCageForwardRequest;
-import com.opencagedata.jopencage.model.JOpenCageLatLng;
-import com.opencagedata.jopencage.model.JOpenCageResponse;
+import com.opencagedata.jopencage.model.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Service
 public class OpenCageService {
@@ -34,10 +33,19 @@ public class OpenCageService {
         if (response == null)
             throw new CustomException(ValidationConstants.OPEN_CAGE_CITY_NOT_FOUND);
 
-        JOpenCageLatLng firstResultLatLng = response.getFirstPosition();
+        Optional<JOpenCageLatLng> resultLatLng = response.getResults()
+                .stream()
+                .filter(result -> result.getComponents().getType().equals("city"))
+                .map(JOpenCageResult::getGeometry)
+                .findFirst();
+
+        if (resultLatLng.isEmpty()) {
+            throw new CustomException(ValidationConstants.OPEN_CAGE_CITY_NOT_FOUND);
+        }
+
         return Geometry.builder()
-                .latitude(BigDecimal.valueOf(firstResultLatLng.getLat()))
-                .longitude(BigDecimal.valueOf(firstResultLatLng.getLng()))
+                .latitude(BigDecimal.valueOf(resultLatLng.get().getLat()))
+                .longitude(BigDecimal.valueOf(resultLatLng.get().getLng()))
                 .build();
     }
 
@@ -57,10 +65,19 @@ public class OpenCageService {
         if (response == null)
             throw new CustomException(ValidationConstants.OPEN_CAGE_ADDRESS_NOT_FOUND);
 
-        JOpenCageLatLng firstResultLatLng = response.getFirstPosition();
+        Optional<JOpenCageLatLng> resultLatLng = response.getResults()
+                .stream()
+                .filter(result -> !result.getComponents().getType().equals("city"))
+                .map(JOpenCageResult::getGeometry)
+                .findFirst();
+
+        if (resultLatLng.isEmpty()) {
+            throw new CustomException(ValidationConstants.OPEN_CAGE_ADDRESS_NOT_FOUND);
+        }
+
         return Geometry.builder()
-                .latitude(BigDecimal.valueOf(firstResultLatLng.getLat()))
-                .longitude(BigDecimal.valueOf(firstResultLatLng.getLng()))
+                .latitude(BigDecimal.valueOf(resultLatLng.get().getLat()))
+                .longitude(BigDecimal.valueOf(resultLatLng.get().getLng()))
                 .build();
     }
 }
