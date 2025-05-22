@@ -1,13 +1,12 @@
 package com.github.discovery126.greenimpact.service;
 
 import com.github.discovery126.greenimpact.dto.request.EventRequest;
+import com.github.discovery126.greenimpact.dto.response.AdminEventResponse;
 import com.github.discovery126.greenimpact.dto.response.BooleanResponse;
 import com.github.discovery126.greenimpact.dto.response.EventResponse;
-import com.github.discovery126.greenimpact.dto.response.UserEventResponse;
 import com.github.discovery126.greenimpact.exception.CustomException;
 import com.github.discovery126.greenimpact.exception.ValidationConstants;
 import com.github.discovery126.greenimpact.mapper.EventMapper;
-import com.github.discovery126.greenimpact.mapper.UserMapper;
 import com.github.discovery126.greenimpact.model.*;
 import com.github.discovery126.greenimpact.repository.EventRepository;
 import com.github.discovery126.greenimpact.repository.UserEventRepository;
@@ -30,7 +29,6 @@ public class EventService {
     private final EventRepository eventRepository;
 
     private final EventMapper eventMapper;
-    private final UserMapper userMapper;
 
     private final CityService cityService;
     private final OpenCageService openCageService;
@@ -39,7 +37,7 @@ public class EventService {
     private final UserRepository userRepository;
     private final UserEventRepository userEventRepository;
 
-    public EventResponse createEvent(EventRequest eventRequest) {
+    public AdminEventResponse createEvent(EventRequest eventRequest) {
         City city = cityService.getCity(eventRequest.getCityId());
         Geometry geometry = openCageService
                 .getGeometryEvent(city, eventRequest.getStreet(),eventRequest.getHouseNumber());
@@ -62,17 +60,17 @@ public class EventService {
                 .longitude(geometry.getLongitude())
                 .build();
 
-        return eventMapper.toResponse(eventRepository.save(event));
+        return eventMapper.toAdminEventResponse(eventRepository.save(event));
     }
 
-    public List<EventResponse> getAllEvents() {
-        return eventRepository.findAll()
+    public List<AdminEventResponse> getAllEvents() {
+        return eventRepository.findAllByOrderByStartDateDesc()
                 .stream()
-                .map(eventMapper::toResponse)
+                .map(eventMapper::toAdminEventResponse)
                 .toList();
     }
 
-    public EventResponse updateEvent(EventRequest eventRequest, long id) {
+    public AdminEventResponse updateEvent(EventRequest eventRequest, long id) {
         Optional<Event> eventOptional = eventRepository.findById(id);
         if (eventOptional.isEmpty())
             throw new CustomException(ValidationConstants.EVENT_ID_NOT_FOUND);
@@ -112,7 +110,7 @@ public class EventService {
         updateFieldIfChanged(event.getEventPoints(), eventRequest.getEventPoints(), event::setEventPoints);
         updateFieldIfChanged(event.getCity(), city, event::setCity);
 
-        return eventMapper.toResponse(eventRepository.save(event));
+        return eventMapper.toAdminEventResponse(eventRepository.save(event));
     }
 
     public void deleteEvent(long eventId) {

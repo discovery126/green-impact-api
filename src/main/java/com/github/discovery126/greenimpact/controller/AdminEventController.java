@@ -1,8 +1,8 @@
 package com.github.discovery126.greenimpact.controller;
 
 import com.github.discovery126.greenimpact.dto.request.EventRequest;
+import com.github.discovery126.greenimpact.dto.response.AdminEventResponse;
 import com.github.discovery126.greenimpact.dto.response.BaseSuccessResponse;
-import com.github.discovery126.greenimpact.dto.response.EventResponse;
 import com.github.discovery126.greenimpact.service.EventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,19 +22,19 @@ public class AdminEventController {
     private final EventService eventService;
 
     @PostMapping
-    public ResponseEntity<BaseSuccessResponse<EventResponse>> createEvent(@RequestBody @Valid EventRequest eventRequest) {
+    public ResponseEntity<BaseSuccessResponse<AdminEventResponse>> createEvent(@RequestBody @Valid EventRequest eventRequest) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(BaseSuccessResponse.<EventResponse>builder()
+                .body(BaseSuccessResponse.<AdminEventResponse>builder()
                         .code(HttpStatus.CREATED.value())
                         .data(eventService.createEvent(eventRequest))
                         .build()
                 );
     }
     @GetMapping
-    public ResponseEntity<BaseSuccessResponse<List<EventResponse>>> getAllEvents() {
+    public ResponseEntity<BaseSuccessResponse<List<AdminEventResponse>>> getAllEvents() {
         return ResponseEntity
-                .ok(BaseSuccessResponse.<List<EventResponse>>builder()
+                .ok(BaseSuccessResponse.<List<AdminEventResponse>>builder()
                         .code(HttpStatus.OK.value())
                         .data(eventService.getAllEvents())
                         .build()
@@ -42,10 +42,10 @@ public class AdminEventController {
     }
 
     @PostMapping("{id}")
-    public ResponseEntity<BaseSuccessResponse<EventResponse>> updateEvent(@RequestBody @Valid EventRequest eventRequest,
+    public ResponseEntity<BaseSuccessResponse<AdminEventResponse>> updateEvent(@RequestBody @Valid EventRequest eventRequest,
                                                      @PathVariable long id) {
         return ResponseEntity
-                .ok(BaseSuccessResponse.<EventResponse>builder()
+                .ok(BaseSuccessResponse.<AdminEventResponse>builder()
                         .code(HttpStatus.OK.value())
                         .data(eventService.updateEvent(eventRequest,id))
                         .build()
