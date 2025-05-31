@@ -37,4 +37,6 @@ SELECT t.*
 FROM tasks t
 WHERE t.type='DAILY' OR t.type='LIMITED' AND t.expired_date > now() AT TIME ZONE 'Europe/Moscow';""",nativeQuery = true)
     List<Task> findAllTasks();
+
+    List<Task> findAllByOrderByTaskTypeDescPointsDesc();
 }

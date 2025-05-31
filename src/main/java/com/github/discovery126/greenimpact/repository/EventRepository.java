@@ -20,5 +20,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Transactional
     @Query("UPDATE Event e SET e.status = 'COMPLETED' WHERE e.endDate < :now AND e.status != 'COMPLETED'")
     void updateStatusForCompletedEvents(@Param("now") LocalDateTime now);
-    List<Event> findAllByOrderByStartDate();
+
+    List<Event> findAllByOrderByStartDateDesc();
 }
