@@ -129,10 +129,10 @@ public class TaskUserService {
         User admin = userRepository.findById(securitySessionContext.getId())
                 .orElseThrow(() -> new CustomException(ValidationConstants.ADMIN_NOT_FOUND));
 
-        if (taskUser.getAdmin() != null && !taskUser.getAdmin().equals(admin)) {
+        if (taskUser.getAdmin() != null) {
             throw new CustomException(ValidationConstants.TASK_ALREADY_TAKEN_FOR_CHECK);
         }
-        if (taskUser.getStatus() == TaskCompletionStatus.CONFIRMED) {
+        if (taskUser.getStatus().equals(TaskCompletionStatus.CONFIRMED) || taskUser.getStatus().equals(TaskCompletionStatus.REJECTED)) {
             throw new CustomException(ValidationConstants.TASK_ALREADY_ANSWERED);
         }
         taskUser.setStatus(status);

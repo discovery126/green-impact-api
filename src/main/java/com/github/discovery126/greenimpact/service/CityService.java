@@ -45,6 +45,10 @@ public class CityService {
     }
 
     public CityResponse createCity(CityRequest cityRequest) {
+        Optional<City> cityOptional = cityRepository.findByNameCity(cityRequest.getNameCity());
+        if (cityOptional.isPresent()) {
+            throw new CustomException(ValidationConstants.CITY_ALREADY_EXIST);
+        }
         Geometry geometry = openCageService.getGeometryCity(cityRequest.getNameCity());
         City city = City.builder()
                 .latitude(geometry.getLatitude())
