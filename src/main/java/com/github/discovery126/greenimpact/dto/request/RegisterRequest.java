@@ -18,6 +18,7 @@ public class RegisterRequest {
 
     @NotBlank(message = "Email обязателен для заполнения")
     @Email(message = "Email должен быть действительным")
+    @Size(max=100, message = "Email должен содержать не более 100 символов")
     private String email;
 
     @NotBlank(message = "Отображаемое имя обязательно")
@@ -30,7 +31,7 @@ public class RegisterRequest {
     private String displayName;
 
     @NotBlank(message = "Пароль обязателен для заполнения")
-    @Size(min = 8, message = "Пароль должен содержать не менее 8 символов")
+    @Size(min = 8,max=72, message = "Пароль должен содержать не менее 8 и не более 72 символов")
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%^&*])(?=\\S+$).{8,}$",
             message = "Пароль должен содержать хотя бы одну заглавную букву, одну цифру и один специальный символ")
     private String password;

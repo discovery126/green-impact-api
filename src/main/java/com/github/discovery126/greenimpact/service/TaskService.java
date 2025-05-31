@@ -27,7 +27,7 @@ public class TaskService {
     private final SecuritySessionContext securitySessionContext;
 
     public List<TaskResponse> getAllTasks() {
-        return taskRepository.findAll()
+        return taskRepository.findAllByOrderByTaskTypeDescPointsDesc()
                 .stream()
                 .map(taskMapper::toResponse)
                 .toList();

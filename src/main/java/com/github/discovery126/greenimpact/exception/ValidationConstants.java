@@ -2,6 +2,7 @@ package com.github.discovery126.greenimpact.exception;
 
 public interface ValidationConstants {
     String CITY_NAME_NOT_FOUND = "Город с таким названием не найден";
+    String CITY_ALREADY_EXIST = "Город с таким названием уже существует";
     String CITY_ID_NOT_FOUND = "Город с таким id не найден";
 
     String OPEN_CAGE_API_NOT_FOUND = "OpenCageAPI ключ отсутствует";
@@ -30,6 +31,7 @@ public interface ValidationConstants {
     String TASK_COMPLETED_NOT_FOUND = "Выполненное задание с id не найдено";
 
     String USER_UNAUTHORIZED = "Пользователь не авторизован";
+    String PASSWORD_CANT_BE_MORE_THAN_72 = "Пароль не может быть таким большим";
 
     String EVENT_ID_NOT_FOUND = "Мероприятие с таким id не найдено";
     String EVENT_NOT_ACTIVE = "Это мероприятие ещё не наступило или уже прошло";
