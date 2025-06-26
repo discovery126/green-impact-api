@@ -108,7 +108,7 @@ public class RewardService {
     }
 
     public List<RewardResponse> getAllAvailableRewards() {
-        return rewardRepository.findAll()
+        return rewardRepository.findAllByOrderByCostPointsAsc()
                 .stream()
                 .filter(reward -> reward.getAmount() > 0)
                 .map(rewardMapper::toResponse)

@@ -61,6 +61,7 @@ public interface TaskUserRepository extends JpaRepository<TaskUser, Long> {
         SELECT tuc.*
         FROM tasks_users_status tuc
         WHERE tuc.completed_at IS NOT NULL
+        ORDER BY tuc.verified_at DESC
         """, countQuery = """
         SELECT COUNT(*) 
         FROM tasks_users_status tuc
