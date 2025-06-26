@@ -1,0 +1,35 @@
+services:
+  app:
+    image: app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+  postgres:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    volumes:
+      - ~/apps/postgres-green-impact:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: green-impact
+  osrm-foot:
+    image: osrm/osrm-backend
+    container_name: osrm-foot
+    ports:
+      - "5000:5000"
+    volumes:
+      - C:/green-impact-osrm/foot:/data
+    command: osrm-routed --algorithm mld /data/region.osrm
+  osrm-car:
+    image: osrm/osrm-backend
+    container_name: osrm-car
+    ports:
+      - "5001:5000"
+    volumes:
+      - C:/green-impact-osrm/car:/data
+    command: osrm-routed --algorithm mld /data/region.osrm
