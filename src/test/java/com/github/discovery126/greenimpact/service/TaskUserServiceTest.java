@@ -98,7 +98,7 @@ class TaskUserServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionIfAnotherAdminIsCheckingTheTask() {
+        void shouldThrowExceptionIfAnotherAdminIsCheckingTheTask() {
         // given
         Long taskCompletionId = 1L;
         Long adminId = 3L;

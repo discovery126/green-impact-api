@@ -31,6 +31,7 @@ public class EventMapper {
                 .longitude(event.getLongitude())
                 .build();
     }
+
     public AdminEventResponse toAdminEventResponse(Event event) {
         return AdminEventResponse.builder()
                 .id(event.getId())

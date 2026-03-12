@@ -82,7 +82,7 @@ public class SecurityConfig {
                                        "/v1/cities/**",
                                        "/v1/login",
                                        "/error").permitAll()
-                               .requestMatchers("/swagger-ui/**", "/v3/api-docs/**") .permitAll()
+                               .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                                .anyRequest().authenticated())
                .sessionManagement(session ->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                .exceptionHandling(e -> {

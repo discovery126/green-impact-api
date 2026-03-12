@@ -31,6 +31,7 @@ public class AdminEventController {
                         .build()
                 );
     }
+
     @GetMapping
     public ResponseEntity<BaseSuccessResponse<List<AdminEventResponse>>> getAllEvents() {
         return ResponseEntity
@@ -42,15 +43,18 @@ public class AdminEventController {
     }
 
     @PostMapping("{id}")
-    public ResponseEntity<BaseSuccessResponse<AdminEventResponse>> updateEvent(@RequestBody @Valid EventRequest eventRequest,
-                                                     @PathVariable long id) {
+    public ResponseEntity<BaseSuccessResponse<AdminEventResponse>> updateEvent(
+            @RequestBody @Valid EventRequest eventRequest,
+            @PathVariable long id
+    ) {
         return ResponseEntity
                 .ok(BaseSuccessResponse.<AdminEventResponse>builder()
                         .code(HttpStatus.OK.value())
-                        .data(eventService.updateEvent(eventRequest,id))
+                        .data(eventService.updateEvent(eventRequest, id))
                         .build()
                 );
     }
+
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteEvent(@PathVariable long id) {
         eventService.deleteEvent(id);

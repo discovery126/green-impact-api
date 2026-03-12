@@ -25,7 +25,7 @@ public class UserEventController {
     }
     @PostMapping("/{eventId}/confirm")
     public ResponseEntity<Void> confirmEvent(@PathVariable Long eventId,
-                                                          @RequestParam String eventCode) {
+                                             @RequestParam String eventCode) {
         eventService.confirmEvent(eventId,eventCode);
         return ResponseEntity
                 .status(HttpStatus.CREATED)

@@ -5,11 +5,32 @@
 GreenImpact — backend часть веб-приложения для мотивации и отслеживания экологичных действий.  
 Пользователи могут регистрироваться, участвовать в эко-событиях, накапливать баллы и получать награды.
 
+## Архитектура системы
+
+Backend является частью веб-приложения GreenImpact. Он предоставляет REST API для фронтенда.
+
+Основные компоненты:
+
+- **Spring Boot** — бизнес-логика, обработка запросов, авторизация
+- **PostgreSQL** — хранение данных пользователей, заданий, наград и мероприятий
+- **VK Cloud** — хранение изображений заданий 
+- **OSRM** — сервис маршрутизации для построения маршрутов к мероприятиям (пеший / на машине)
+
+Аутентификация пользователей реализована с использованием JWT через Spring Security.
+
+Архитектура backend построена по принципу слоистой структуры:
+**Controller → Service → Repository → Database**
+
+### Диаграмма развертывания
+
+![Диаграмма развертывания](docs/deployment-diagram.svg)
+
 ## Технологии
 
 - Java 17
 - Spring Boot
 - PostgreSQL
+- Flyway
 - JWT
 - Docker
 - VK Cloud
@@ -56,8 +77,92 @@ GreenImpact — backend часть веб-приложения для мотив
 Для удобства тестирования и ознакомления с API в проекте доступен Swagger UI.
 После запуска приложения интерфейс документации будет доступен по адресу:
 ```bash
-http://localhost:8080/swagger-ui/index.html
+http://localhost:8080/api/swagger-ui/index.html
 ```
+## Примеры использования API
+
+###  Регистрация пользователя
+
+**HTTP Request:**  
+`POST http://localhost:8080/api/v1/register`  
+**Headers:** `Content-Type: application/json`
+
+**Request Body:**
+```json
+{
+    "email": "user@gmail.com",
+    "password": "Password1!"
+}
+```
+
+**Response Body:** (пусто)
+
+Status Code: 201 Created
+
+
+### Авторизация
+
+**HTTP Request:**  
+`POST http://localhost:8080/api/v1/login`  
+**Headers:** `Content-Type: application/json`
+
+**Request Body:**
+```json
+{
+  "email" : "test@test.ru",
+  "password" : "Passw0rd!"
+}
+```
+
+**Response Body:**
+
+```json
+{
+    "code": 200,
+    "data": {
+        "token": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlkIjoxNywic3ViIjoidGVzdEB0ZXN0LnJ1IiwiaWF0IjoxNzczMzM4ODExLCJleHAiOjE3NzMzNTA4MTF9.YXBRKwiQx1UBx7cWZGY1lHCn0BZBKs8RxJV2ROEgkFs"
+    }
+}
+```
+Status Code: 200 OK
+
+### Получение всех заданий
+
+`GET http://localhost:8080/api/v1/tasks`
+
+**Response Body:**
+```json
+{
+  "code": 200,
+  "data": [
+    {
+      "id": 22,
+      "title": "Сдача батареек",
+      "description": "Сдавайте использованные батарейки в специальные контейнеры. Это предотвращает загрязнение почвы и воды тяжёлыми металлами. Маленькое действие — большой вклад в природу.",
+      "points": 8,
+      "task_type": "DAILY",
+      "expired_date": null,
+      "category": {
+        "id": 1,
+        "category_name": "Сдача"
+      }
+    },
+    {
+      "id": 23,
+      "title": "Проезд на велосипеде",
+      "description": "Оставьте автомобиль дома и отправляйтесь на велосипеде. Снижайте выбросы углекислого газа и ведите активный образ жизни. Доступно один раз в день при подтверждении.",
+      "points": 5,
+      "task_type": "DAILY",
+      "expired_date": null,
+      "category": {
+        "id": 2,
+        "category_name": "Транспорт"
+      }
+    }
+  ]
+}
+```
+Status Code: 200 OK
 ## Установка и запуск
 
 ### Сборка и настройка backend-приложения

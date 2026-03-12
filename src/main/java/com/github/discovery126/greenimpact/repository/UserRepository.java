@@ -30,7 +30,7 @@ LEFT JOIN (
     WHERE ue.confirmed_at >= :startDate AND ue.confirmed_at < :endDate
     GROUP BY ue.user_id
 ) ep ON u.id = ep.user_id
-ORDER BY total_points DESC, u.created_at ASC
+ORDER BY total_points DESC, u.created_at
 LIMIT 10;
 """,nativeQuery = true)
     List<RatingResponse> findRatingByStartDateAndEndDate(@Param("startDate") LocalDate startDate,
